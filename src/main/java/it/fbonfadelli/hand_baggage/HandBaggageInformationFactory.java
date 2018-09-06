@@ -17,17 +17,21 @@ public class HandBaggageInformationFactory {
     private static final String CUSTOMER_AREA_CIA_NEW_HAND_LUGGAGE_POLICY_ALERT_TITLE_FR = "customer_area.new_hand_baggage_policy.alert.title.my_company_id";
     private static final String CUSTOMER_AREA_CIA_NEW_HAND_LUGGAGE_POLICY_ALERT_FR = "customer_area.new_hand_baggage_policy.alert.my_company_id";
     private static final String MY_COMPANY_AIRLINE_ID = "MY_COMPANY_AIRLINE_ID";
+    private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
+    private static final LocalDate THIRTY_FIRST_OF_OCTOBER = LocalDate.of(2018, 10, 31);
 
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
         LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
-        if (flight.isOneWay() && isMyCompany(flight) && flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+        if (flight.isOneWay()
+                && isMyCompany(flight)
+                && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
             return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
         }
 
         if (flight.isOneWay()) {
             if (isMyCompany(flight)) {
-                if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                if (!flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
                 }
             }
@@ -43,8 +47,8 @@ public class HandBaggageInformationFactory {
             LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
             LocalDate returnDepartureDate = order.getReturnDepartureDate();
             if (isMyCompany(flight)) {
-                if (outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
-                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31))) {
+                if (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)) {
                     return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
                 }
 
@@ -55,8 +59,8 @@ public class HandBaggageInformationFactory {
             LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
             LocalDate returnDepartureDate = order.getReturnDepartureDate();
             if (isMyCompany(flight)) {
-                if (!(outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
-                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31)))) {
+                if (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
                 }
             }
