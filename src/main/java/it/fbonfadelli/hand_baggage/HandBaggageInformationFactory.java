@@ -19,7 +19,10 @@ public class HandBaggageInformationFactory {
 
     public HandBaggageInformation from(Order order, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
+        return handBaggageInformationFor(renderLanguage, flight);
+    }
 
+    private HandBaggageInformation handBaggageInformationFor(String renderLanguage, Flight flight) {
         return handBaggageInformationPolicies.stream()
                 .filter(policy -> policy.canHandle(flight))
                 .findFirst()
