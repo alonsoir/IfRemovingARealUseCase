@@ -1,5 +1,6 @@
 package it.fbonfadelli.model;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 public class Flight {
@@ -53,5 +54,9 @@ public class Flight {
         }
 
         return getLegs().get(1);
+    }
+
+    public LocalDateTime getOutboundDepartureDate() {
+        return getFirstLeg().getFirstHop().getDeparture().getDate();
     }
 }
