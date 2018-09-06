@@ -52,10 +52,6 @@ public class HandBaggageInformationFactory {
         return notMyCompanyHandBaggageInformationFactory.make();
     }
 
-    private boolean isMyCompany(Flight flight) {
-        return flight.isMyCompany();
-    }
-
 
     private class MyCompanyOneWayAfterTheFirstOfNovember {
 
@@ -67,7 +63,7 @@ public class HandBaggageInformationFactory {
 
         public boolean canHandle(Flight flight) {
             return flight.isOneWay()
-                    && isMyCompany(flight)
+                    && flight.isMyCompany()
                     && flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
         }
 
@@ -84,7 +80,9 @@ public class HandBaggageInformationFactory {
         }
 
         public boolean canHandle(Flight flight) {
-            return flight.isOneWay() && isMyCompany(flight) && !flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
+            return flight.isOneWay()
+                    && flight.isMyCompany()
+                    && !flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
         }
 
         private HandBaggageInformation getFrom(String renderLanguage) {
@@ -102,8 +100,11 @@ public class HandBaggageInformationFactory {
         public boolean canHandle(Flight flight, Order order) {
             LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
             LocalDate returnDepartureDate = order.getReturnDepartureDate();
-            return !flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
-                    || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER));
+            return !flight.isOneWay()
+                    && flight.isMyCompany()
+                    && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)
+                    );
         }
 
         public HandBaggageInformation getFrom(String renderLanguage) {
@@ -121,8 +122,11 @@ public class HandBaggageInformationFactory {
         private boolean canHandle(Flight flight, Order order) {
             LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
             LocalDate returnDepartureDate = order.getReturnDepartureDate();
-            return !flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
-                    || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)));
+            return !flight.isOneWay()
+                    && flight.isMyCompany()
+                    && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))
+                    );
         }
 
         public HandBaggageInformation getFrom(String renderLanguage) {
