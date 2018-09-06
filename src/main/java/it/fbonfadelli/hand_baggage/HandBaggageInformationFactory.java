@@ -41,12 +41,11 @@ public class HandBaggageInformationFactory {
                 myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
         );
 
-        for (HandBaggageInformationPolicy policy : policies) {
-            if (policy.canHandle(flight)) {
-                return policy.getFrom(renderLanguage);
-            }
-        }
 
-        return notMyCompanyHandBaggageInformationFactory.make();
+        return policies.stream()
+                .filter(policy -> policy.canHandle(flight))
+                .findFirst()
+                .map(policy -> policy.getFrom(renderLanguage))
+                .orElse(notMyCompanyHandBaggageInformationFactory.make());
     }
 }
