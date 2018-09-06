@@ -2,6 +2,7 @@ package it.fbonfadelli.hand_baggage;
 
 import it.fbonfadelli.FlightBuilder;
 import it.fbonfadelli.OrderBuilder;
+import it.fbonfadelli.hand_baggage.factory.NotMyCompanyHandBaggageInformationFactory;
 import it.fbonfadelli.hand_baggage.policy.HandBaggagePoliciesFactory;
 import it.fbonfadelli.model.*;
 import it.fbonfadelli.translation.TranslationRepository;
@@ -35,7 +36,7 @@ public class HandBaggageInformationFactoryTest {
     @Before
     public void setUp() {
         translationRepository = Mockito.mock(TranslationRepository.class);
-        handBaggageInformationFactory = new HandBaggageInformationFactory(new HandBaggagePoliciesFactory().make(translationRepository));
+        handBaggageInformationFactory = new HandBaggageInformationFactory(new HandBaggagePoliciesFactory().make(translationRepository), new NotMyCompanyHandBaggageInformationFactory());
 
         when(translationRepository.retrieve("customer_area.hand_baggage_policy.label.my_company_id", A_RENDER_LANGUAGE))
                 .thenReturn(MY_COMPANY_OLD_HAND_BAGGAGE_LINK_MESSAGE);
