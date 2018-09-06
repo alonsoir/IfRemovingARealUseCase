@@ -1,8 +1,9 @@
-package it.fbonfadelli.hand_baggage;
+package it.fbonfadelli.hand_baggage.factory;
 
+import it.fbonfadelli.hand_baggage.HandBaggageInformation;
 import it.fbonfadelli.translation.TranslationRepository;
 
-class OldMyCompanyHandBaggageInformationFactory {
+public class OldMyCompanyHandBaggageInformationFactory {
     private static final String MY_COMPANY_BAGGAGE_INFORMATION_LABEL = "customer_area.hand_baggage_policy.label.my_company_id";
     private static final String MY_COMPANY_BAGGAGE_INFORMATION_LINK = "customer_area.hand_baggage_policy.link.my_company_id";
 

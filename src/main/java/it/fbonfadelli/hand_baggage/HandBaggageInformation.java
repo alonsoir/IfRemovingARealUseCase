@@ -9,7 +9,7 @@ public class HandBaggageInformation {
     public final boolean handBaggageAllowed;
     public final String handBaggagePolicy;
 
-    HandBaggageInformation(HandBaggageAlert alert, boolean handBaggageAllowed, String handBaggagePolicy) {
+    public HandBaggageInformation(HandBaggageAlert alert, boolean handBaggageAllowed, String handBaggagePolicy) {
         this.alert = alert;
         this.handBaggageAllowed = handBaggageAllowed;
         this.handBaggagePolicy = handBaggagePolicy;

@@ -1,9 +1,10 @@
-package it.fbonfadelli.hand_baggage;
+package it.fbonfadelli.hand_baggage.factory;
 
+import it.fbonfadelli.hand_baggage.HandBaggageInformation;
 import it.fbonfadelli.model.HandBaggageAlert;
 import it.fbonfadelli.translation.TranslationRepository;
 
-class NewMyCompanyHandBaggageInformationFactory {
+public class NewMyCompanyHandBaggageInformationFactory {
     private static final String MY_COMPANY_NEW_BAGGAGE_INFORMATION_LABEL = "customer_area.new_hand_baggage_policy.label.my_company_id";
     private static final String MY_COMPANY_NEW_BAGGAGE_INFORMATION_LINK = "customer_area.new_hand_baggage_policy.link.my_company_id";
     private static final String CUSTOMER_AREA_CIA_NEW_HAND_LUGGAGE_POLICY_ALERT_TITLE = "customer_area.new_hand_baggage_policy.alert.title.my_company_id";
