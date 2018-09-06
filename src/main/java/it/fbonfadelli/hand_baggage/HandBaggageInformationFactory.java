@@ -7,13 +7,10 @@ import it.fbonfadelli.model.Flight;
 import it.fbonfadelli.model.Order;
 import it.fbonfadelli.translation.TranslationRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
-    private static final LocalDate THIRTY_FIRST_OF_OCTOBER = LocalDate.of(2018, 10, 31);
-    private static final LocalDateTime THIRTY_FIRST_OF_OCTOBER_2 = LocalDateTime.of(2018, 10, 31,0,0,0);
 
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -46,7 +43,7 @@ public class HandBaggageInformationFactory {
 
         MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
                 MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
-        if (myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.canHandle(flight, order)) {
+        if (myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.canHandle(flight)) {
             return myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
 
@@ -102,7 +99,7 @@ public class HandBaggageInformationFactory {
             return !flight.isOneWay()
                     && flight.isMyCompany()
                     && (flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER)
-                        || flight.getReturnDepartureDate().isAfter(THIRTY_FIRST_OF_OCTOBER_2)
+                        || flight.getReturnDepartureDate().isAfter(FIRST_OF_NOVEMBER)
                     );
         }
 
@@ -118,13 +115,11 @@ public class HandBaggageInformationFactory {
             this.oldMyCompanyHandBaggageInformationFactory = oldMyCompanyHandBaggageInformationFactory;
         }
 
-        private boolean canHandle(Flight flight, Order order) {
-            LocalDateTime outboundDepartureDate = flight.getOutboundDepartureDate();
-            LocalDate returnDepartureDate = order.getReturnDepartureDate();
+        private boolean canHandle(Flight flight) {
             return !flight.isOneWay()
                     && flight.isMyCompany()
-                    && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
-                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))
+                    && (!(flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER)
+                        || flight.getReturnDepartureDate().isAfter(FIRST_OF_NOVEMBER))
                     );
         }
 
