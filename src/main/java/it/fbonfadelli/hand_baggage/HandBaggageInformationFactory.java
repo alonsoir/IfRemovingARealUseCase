@@ -31,7 +31,9 @@ public class HandBaggageInformationFactory {
             } else {
                 return noMyCompanyInformationInfo();
             }
-        } else { //round trip
+        }
+
+        if (!flight.isOneWay()) {  //round trip
             if (isMyCompany(flight)) {
                 LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
                 LocalDate returnDepartureDate = order.getReturnDepartureDate();
@@ -45,6 +47,8 @@ public class HandBaggageInformationFactory {
                 return noMyCompanyInformationInfo();
             }
         }
+
+        return noMyCompanyInformationInfo();
     }
 
     private HandBaggageInformation noMyCompanyInformationInfo() {
