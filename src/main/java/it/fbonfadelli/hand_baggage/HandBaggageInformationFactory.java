@@ -40,9 +40,6 @@ public class HandBaggageInformationFactory {
             return myCompanyOneWayBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
 
-        if (flight.isOneWay() && !isMyCompany(flight)) {
-            return notMyCompanyHandBaggageInformationFactory.make();
-        }
 
         if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
                 || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
@@ -52,6 +49,10 @@ public class HandBaggageInformationFactory {
         if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
                 || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)))) {
             return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+        }
+
+        if (flight.isOneWay() && !isMyCompany(flight)) {
+            return notMyCompanyHandBaggageInformationFactory.make();
         }
 
         if (!flight.isOneWay() && !isMyCompany(flight)) {
