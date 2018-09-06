@@ -25,10 +25,13 @@ public class HandBaggageInformationFactory {
         LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
         LocalDate returnDepartureDate = order.getReturnDepartureDate();
 
+        NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
+                new NewMyCompanyHandBaggageInformationFactory(translationRepository);
+
         if (flight.isOneWay()
                 && isMyCompany(flight)
                 && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
-            return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+            return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
         }
 
         if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
@@ -41,7 +44,7 @@ public class HandBaggageInformationFactory {
 
         if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
                         || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
-                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+            return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
         }
 
         if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
@@ -70,10 +73,6 @@ public class HandBaggageInformationFactory {
                 true,
                 "<a target=\"_blank\" href=\"" +
                         translationRepository.retrieve(MY_COMPANY_BAGGAGE_INFORMATION_LINK, renderLanguage) + "\">" + translationRepository.retrieve(MY_COMPANY_BAGGAGE_INFORMATION_LABEL, renderLanguage) + "</a>");
-    }
-
-    private HandBaggageInformation newMyCompanyHandBaggageInformation(TranslationRepository translationRepository, String renderLanguage) {
-        return new NewMyCompanyHandBaggageInformationFactory(translationRepository).execute(renderLanguage);
     }
 
     private boolean isMyCompany(Flight flight) {
