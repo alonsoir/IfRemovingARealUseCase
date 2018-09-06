@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 import static it.fbonfadelli.HopBuilder.aHop;
 import static it.fbonfadelli.LegBuilder.aLeg;
-import static it.fbonfadelli.hand_baggage.HandBaggageInformationFactory.HandBaggageInformation;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
