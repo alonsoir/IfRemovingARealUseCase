@@ -10,8 +10,6 @@ import it.fbonfadelli.translation.TranslationRepository;
 import java.time.LocalDateTime;
 
 public class HandBaggageInformationFactory {
-    private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
-
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
 
@@ -51,7 +49,8 @@ public class HandBaggageInformationFactory {
     }
 
 
-    private class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
+    private static class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
+        private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
 
         private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
 
@@ -72,7 +71,9 @@ public class HandBaggageInformationFactory {
         }
     }
 
-    private class MyCompanyOneWayBeforeTheFirstOfNovember implements HandBaggageInformationPolicy {
+    private static class MyCompanyOneWayBeforeTheFirstOfNovember implements HandBaggageInformationPolicy {
+        private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
+
         private final OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory;
 
         private MyCompanyOneWayBeforeTheFirstOfNovember(OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory) {
@@ -92,7 +93,9 @@ public class HandBaggageInformationFactory {
         }
     }
 
-    private class MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
+    private static class MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
+        private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
+
         private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
 
         public MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory) {
@@ -114,7 +117,9 @@ public class HandBaggageInformationFactory {
         }
     }
 
-    private class MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember implements HandBaggageInformationPolicy {
+    private static class MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember implements HandBaggageInformationPolicy {
+        private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
+
         private final OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory;
 
         private MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory) {
