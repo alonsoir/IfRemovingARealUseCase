@@ -40,15 +40,17 @@ public class HandBaggageInformationFactory {
             return myCompanyOneWayBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
 
-
-        if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
-                || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
-            return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+        MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
+                new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
+        if (myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember.canHandle(flight, outboundDepartureDate, returnDepartureDate)) {
+            return myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember
+                    .getFrom(renderLanguage);
         }
 
-        if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
-                || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)))) {
-            return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+        MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
+                MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
+        if (myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.canHandle(flight, outboundDepartureDate, returnDepartureDate)) {
+            return myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
 
         return notMyCompanyHandBaggageInformationFactory.make();
@@ -91,6 +93,40 @@ public class HandBaggageInformationFactory {
 
         private HandBaggageInformation getFrom(String renderLanguage) {
             return this.oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+        }
+    }
+
+    private class MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember {
+        private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
+
+        public MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory) {
+            this.newMyCompanyHandBaggageInformationFactory = newMyCompanyHandBaggageInformationFactory;
+        }
+
+        public boolean canHandle(Flight flight, LocalDateTime outboundDepartureDate, LocalDate returnDepartureDate) {
+            return !flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                    || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER));
+        }
+
+        public HandBaggageInformation getFrom(String renderLanguage) {
+            return this.newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+        }
+    }
+
+    private class MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember {
+        private final OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory;
+
+        private MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory) {
+            this.oldMyCompanyHandBaggageInformationFactory = oldMyCompanyHandBaggageInformationFactory;
+        }
+
+        private boolean canHandle(Flight flight, LocalDateTime outboundDepartureDate, LocalDate returnDepartureDate) {
+            return !flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                    || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)));
+        }
+
+        public HandBaggageInformation getFrom(String renderLanguage) {
+            return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
     }
 }
