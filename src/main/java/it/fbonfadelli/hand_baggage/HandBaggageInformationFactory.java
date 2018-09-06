@@ -39,7 +39,7 @@ public class HandBaggageInformationFactory {
 
         MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
                 new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-        if (myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember.canHandle(flight, order)) {
+        if (myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember.canHandle(flight)) {
             return myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember
                     .getFrom(renderLanguage);
         }
@@ -98,7 +98,7 @@ public class HandBaggageInformationFactory {
             this.newMyCompanyHandBaggageInformationFactory = newMyCompanyHandBaggageInformationFactory;
         }
 
-        public boolean canHandle(Flight flight, Order order) {
+        public boolean canHandle(Flight flight) {
             return !flight.isOneWay()
                     && flight.isMyCompany()
                     && (flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER)
