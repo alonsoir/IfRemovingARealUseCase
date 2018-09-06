@@ -47,19 +47,6 @@ public class HandBaggageInformationFactory {
             }
         }
 
-        if (myCompanyOneWayBeforeTheFirstOfNovember.canHandle(flight)) {
-            return myCompanyOneWayBeforeTheFirstOfNovember.getFrom(renderLanguage);
-        }
-
-        if (myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember.canHandle(flight)) {
-            return myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember
-                    .getFrom(renderLanguage);
-        }
-
-        if (myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.canHandle(flight)) {
-            return myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.getFrom(renderLanguage);
-        }
-
         return notMyCompanyHandBaggageInformationFactory.make();
     }
 }
