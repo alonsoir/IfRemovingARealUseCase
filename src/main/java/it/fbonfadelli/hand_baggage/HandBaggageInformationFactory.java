@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
     private static final LocalDate THIRTY_FIRST_OF_OCTOBER = LocalDate.of(2018, 10, 31);
+    private static final LocalDateTime THIRTY_FIRST_OF_OCTOBER_2 = LocalDateTime.of(2018, 10, 31,0,0,0);
 
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -98,12 +99,10 @@ public class HandBaggageInformationFactory {
         }
 
         public boolean canHandle(Flight flight, Order order) {
-            LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
-            LocalDate returnDepartureDate = order.getReturnDepartureDate();
             return !flight.isOneWay()
                     && flight.isMyCompany()
-                    && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
-                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)
+                    && (flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER)
+                        || flight.getReturnDepartureDate().isAfter(THIRTY_FIRST_OF_OCTOBER_2)
                     );
         }
 
@@ -120,7 +119,7 @@ public class HandBaggageInformationFactory {
         }
 
         private boolean canHandle(Flight flight, Order order) {
-            LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+            LocalDateTime outboundDepartureDate = flight.getOutboundDepartureDate();
             LocalDate returnDepartureDate = order.getReturnDepartureDate();
             return !flight.isOneWay()
                     && flight.isMyCompany()

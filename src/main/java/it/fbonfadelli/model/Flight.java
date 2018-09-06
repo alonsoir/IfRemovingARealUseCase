@@ -65,4 +65,8 @@ public class Flight {
     public boolean isMyCompany() {
         return getAirlineIds().contains(MY_COMPANY_AIRLINE_ID);
     }
+
+    public LocalDateTime getReturnDepartureDate() {
+        return getReturnLeg().getFirstHop().getDeparture().getDate();
+    }
 }
