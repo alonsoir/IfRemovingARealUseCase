@@ -9,15 +9,20 @@ import it.fbonfadelli.translation.TranslationRepository;
 import java.util.List;
 
 public class HandBaggageInformationFactory {
-    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+
+    private final List<HandBaggageInformationPolicy> handBaggageInformationPolicies;
+
+    public HandBaggageInformationFactory(List<HandBaggageInformationPolicy> handBaggageInformationPolicies) {
+        this.handBaggageInformationPolicies = handBaggageInformationPolicies;
+    }
+
+    public HandBaggageInformation from(Order order, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
 
         NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
                 new NotMyCompanyHandBaggageInformationFactory();
 
-        List<HandBaggageInformationPolicy> policies = new HandBaggagePoliciesFactory().make(translationRepository);
-
-        return policies.stream()
+        return handBaggageInformationPolicies.stream()
                 .filter(policy -> policy.canHandle(flight))
                 .findFirst()
                 .map(policy -> policy.getFrom(renderLanguage))

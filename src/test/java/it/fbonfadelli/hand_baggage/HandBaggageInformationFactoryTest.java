@@ -2,6 +2,7 @@ package it.fbonfadelli.hand_baggage;
 
 import it.fbonfadelli.FlightBuilder;
 import it.fbonfadelli.OrderBuilder;
+import it.fbonfadelli.hand_baggage.policy.HandBaggagePoliciesFactory;
 import it.fbonfadelli.model.*;
 import it.fbonfadelli.translation.TranslationRepository;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class HandBaggageInformationFactoryTest {
     @Before
     public void setUp() {
         translationRepository = Mockito.mock(TranslationRepository.class);
-        handBaggageInformationFactory = new HandBaggageInformationFactory();
+        handBaggageInformationFactory = new HandBaggageInformationFactory(new HandBaggagePoliciesFactory().make(translationRepository));
 
         when(translationRepository.retrieve("customer_area.hand_baggage_policy.label.my_company_id", A_RENDER_LANGUAGE))
                 .thenReturn(MY_COMPANY_OLD_HAND_BAGGAGE_LINK_MESSAGE);
@@ -55,7 +56,7 @@ public class HandBaggageInformationFactoryTest {
         final Flight flight = FlightBuilder.aFlight().addLeg(aLeg().withHops(aHop().withAirlineId("::not_my_company::").build()).build()).build();
         final Order order = OrderBuilder.anOrder().withFlights(flight).build();
 
-        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
 
         assertThat(handBaggageInformation, is(
                 new HandBaggageInformation(
@@ -74,7 +75,7 @@ public class HandBaggageInformationFactoryTest {
                 .build();
         final Order order = OrderBuilder.anOrder().withFlights(flight).build();
 
-        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
 
         assertThat(handBaggageInformation, is(
                 new HandBaggageInformation(
@@ -95,7 +96,7 @@ public class HandBaggageInformationFactoryTest {
                 .build();
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -104,7 +105,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -125,7 +126,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight).build();
 
-        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
 
         assertThat(handBaggageInformation, is(
                 new HandBaggageInformation(
@@ -147,7 +148,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight).build();
 
-        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformation = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
 
         assertThat(handBaggageInformation, is(
                 new HandBaggageInformation(
@@ -184,7 +185,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(flight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -213,7 +214,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(flight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         handBaggageAlert(),
@@ -242,7 +243,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(flight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         handBaggageAlert(),
@@ -268,7 +269,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -277,7 +278,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -303,7 +304,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -312,7 +313,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         handBaggageAlert(),
@@ -338,7 +339,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         handBaggageAlert(),
@@ -347,7 +348,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         handBaggageAlert(),
@@ -373,7 +374,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         handBaggageAlert(),
@@ -382,7 +383,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -407,7 +408,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -416,7 +417,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -441,7 +442,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -450,7 +451,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         handBaggageAlert(),
@@ -475,7 +476,7 @@ public class HandBaggageInformationFactoryTest {
 
         final Order order = OrderBuilder.anOrder().withFlights(outboundFlight, returnFlight).build();
 
-        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 1);
+        HandBaggageInformation handBaggageInformationOfFirstFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 1);
         assertThat(handBaggageInformationOfFirstFlight, is(
                 new HandBaggageInformation(
                         null,
@@ -484,7 +485,7 @@ public class HandBaggageInformationFactoryTest {
                 )
         ));
 
-        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, translationRepository, A_RENDER_LANGUAGE, 2);
+        HandBaggageInformation handBaggageInformationOfSecondFlight = handBaggageInformationFactory.from(order, A_RENDER_LANGUAGE, 2);
         assertThat(handBaggageInformationOfSecondFlight, is(
                 new HandBaggageInformation(
                         null,
