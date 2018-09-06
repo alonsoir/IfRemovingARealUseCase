@@ -22,6 +22,8 @@ public class HandBaggageInformationFactory {
                 new NewMyCompanyHandBaggageInformationFactory(translationRepository);
         OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory =
                 new OldMyCompanyHandBaggageInformationFactory(translationRepository);
+        NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
+                new NotMyCompanyHandBaggageInformationFactory();
 
         if (flight.isOneWay()
                 && isMyCompany(flight)
@@ -34,7 +36,7 @@ public class HandBaggageInformationFactory {
         }
 
         if (flight.isOneWay() && !isMyCompany(flight)) {
-                return noMyCompanyInformationInfo();
+            return notMyCompanyHandBaggageInformationFactory.make();
         }
 
         if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
@@ -48,18 +50,10 @@ public class HandBaggageInformationFactory {
         }
 
         if (!flight.isOneWay() && !isMyCompany(flight)) {
-                return noMyCompanyInformationInfo();
+            return notMyCompanyHandBaggageInformationFactory.make();
         }
 
-        return noMyCompanyInformationInfo();
-    }
-
-    private HandBaggageInformation noMyCompanyInformationInfo() {
-        return new HandBaggageInformation(
-                null,
-                true,
-                null
-        );
+        return notMyCompanyHandBaggageInformationFactory.make();
     }
 
     private boolean isMyCompany(Flight flight) {
