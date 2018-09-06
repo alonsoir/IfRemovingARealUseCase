@@ -15,7 +15,7 @@ class NewMyCompanyHandBaggageInformationFactory {
         this.translationRepository = translationRepository;
     }
 
-    public HandBaggageInformation execute(String renderLanguage) {
+    public HandBaggageInformation from(String renderLanguage) {
         return new HandBaggageInformation(
                 createHandBaggageAlert(translationRepository, renderLanguage),
                 false,
