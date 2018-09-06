@@ -51,7 +51,7 @@ public class HandBaggageInformationFactory {
     }
 
 
-    private class MyCompanyOneWayAfterTheFirstOfNovember {
+    private class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
 
         private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
 
@@ -59,12 +59,14 @@ public class HandBaggageInformationFactory {
             this.newMyCompanyHandBaggageInformationFactory = newMyCompanyHandBaggageInformationFactory;
         }
 
+        @Override
         public boolean canHandle(Flight flight) {
             return flight.isOneWay()
                     && flight.isMyCompany()
                     && flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
         }
 
+        @Override
         public HandBaggageInformation getFrom(String renderLanguage) {
             return this.newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
