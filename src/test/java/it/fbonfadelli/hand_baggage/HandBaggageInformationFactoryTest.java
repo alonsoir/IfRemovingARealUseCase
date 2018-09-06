@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 
 import static it.fbonfadelli.HopBuilder.aHop;
 import static it.fbonfadelli.LegBuilder.aLeg;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -35,7 +34,11 @@ public class HandBaggageInformationFactoryTest {
     @Before
     public void setUp() {
         TranslationRepository translationRepository = Mockito.mock(TranslationRepository.class);
-        handBaggageInformationFactory = new HandBaggageInformationFactory(HandBaggagePoliciesFactory.make(translationRepository), new NotMyCompanyHandBaggageInformationFactory());
+        handBaggageInformationFactory =
+                new HandBaggageInformationFactory(
+                        HandBaggagePoliciesFactory.make(translationRepository),
+                        new NotMyCompanyHandBaggageInformationFactory()
+                );
 
         when(translationRepository.retrieve("customer_area.hand_baggage_policy.label.my_company_id", A_RENDER_LANGUAGE))
                 .thenReturn(MY_COMPANY_OLD_HAND_BAGGAGE_LINK_MESSAGE);
