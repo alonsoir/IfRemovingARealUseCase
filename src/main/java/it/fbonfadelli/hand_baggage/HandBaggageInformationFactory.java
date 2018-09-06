@@ -28,12 +28,18 @@ public class HandBaggageInformationFactory {
                 }
 
             }
+        }
+
+        if (flight.isOneWay()) {
+            LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
             if (isMyCompany(flight)) {
                 if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
                 }
             }
+        }
 
+        if (flight.isOneWay()) {
             if (!isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
             }
@@ -49,13 +55,20 @@ public class HandBaggageInformationFactory {
                 }
 
             }
+        }
+
+        if (!flight.isOneWay()) {  //round trip
+            LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+            LocalDate returnDepartureDate = order.getReturnDepartureDate();
             if (isMyCompany(flight)) {
                 if (!(outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
                         || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31)))) {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
                 }
             }
+        }
 
+        if (!flight.isOneWay()) {  //round trip
             if (!isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
             }
