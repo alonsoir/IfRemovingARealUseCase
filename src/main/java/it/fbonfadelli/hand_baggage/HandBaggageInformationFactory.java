@@ -11,7 +11,7 @@ import it.fbonfadelli.model.Flight;
 import it.fbonfadelli.model.Order;
 import it.fbonfadelli.translation.TranslationRepository;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class HandBaggageInformationFactory {
@@ -34,8 +34,11 @@ public class HandBaggageInformationFactory {
         HandBaggageInformationPolicy myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
                 MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
 
-        List<HandBaggageInformationPolicy> policies = Collections.singletonList(
-                myCompanyOneWayAfterTheFirstOfNovember
+        List<HandBaggageInformationPolicy> policies = Arrays.asList(
+                myCompanyOneWayAfterTheFirstOfNovember,
+                myCompanyOneWayBeforeTheFirstOfNovember,
+                myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,
+                myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
         );
 
         for (HandBaggageInformationPolicy policy : policies) {
