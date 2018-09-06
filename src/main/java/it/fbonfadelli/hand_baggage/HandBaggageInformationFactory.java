@@ -17,8 +17,6 @@ public class HandBaggageInformationFactory {
 
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
-        LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
-        LocalDate returnDepartureDate = order.getReturnDepartureDate();
 
         NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
                 new NewMyCompanyHandBaggageInformationFactory(translationRepository);
