@@ -3,6 +3,10 @@ package it.fbonfadelli.hand_baggage;
 import it.fbonfadelli.hand_baggage.factory.NewMyCompanyHandBaggageInformationFactory;
 import it.fbonfadelli.hand_baggage.factory.NotMyCompanyHandBaggageInformationFactory;
 import it.fbonfadelli.hand_baggage.factory.OldMyCompanyHandBaggageInformationFactory;
+import it.fbonfadelli.hand_baggage.policy.MyCompanyOneWayAfterTheFirstOfNovember;
+import it.fbonfadelli.hand_baggage.policy.MyCompanyOneWayBeforeTheFirstOfNovember;
+import it.fbonfadelli.hand_baggage.policy.MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember;
+import it.fbonfadelli.hand_baggage.policy.MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember;
 import it.fbonfadelli.model.Flight;
 import it.fbonfadelli.model.Order;
 import it.fbonfadelli.translation.TranslationRepository;
@@ -45,6 +49,4 @@ public class HandBaggageInformationFactory {
 
         return notMyCompanyHandBaggageInformationFactory.make();
     }
-
-
 }

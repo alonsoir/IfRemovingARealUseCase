@@ -1,16 +1,18 @@
-package it.fbonfadelli.hand_baggage;
+package it.fbonfadelli.hand_baggage.policy;
 
+import it.fbonfadelli.hand_baggage.HandBaggageInformation;
+import it.fbonfadelli.hand_baggage.HandBaggageInformationPolicy;
 import it.fbonfadelli.hand_baggage.factory.NewMyCompanyHandBaggageInformationFactory;
 import it.fbonfadelli.model.Flight;
 
 import java.time.LocalDateTime;
 
-class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
+public class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
 
     private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
 
-    MyCompanyOneWayAfterTheFirstOfNovember(NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory) {
+    public MyCompanyOneWayAfterTheFirstOfNovember(NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory) {
         this.newMyCompanyHandBaggageInformationFactory = newMyCompanyHandBaggageInformationFactory;
     }
 
