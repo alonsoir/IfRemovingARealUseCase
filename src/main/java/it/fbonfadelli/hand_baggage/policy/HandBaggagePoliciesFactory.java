@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HandBaggagePoliciesFactory {
-    public List<HandBaggageInformationPolicy> make(TranslationRepository translationRepository) {
+    public static List<HandBaggageInformationPolicy> make(TranslationRepository translationRepository) {
         NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
                 new NewMyCompanyHandBaggageInformationFactory(translationRepository);
         OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory =

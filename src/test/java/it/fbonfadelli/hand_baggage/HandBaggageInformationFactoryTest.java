@@ -31,12 +31,11 @@ public class HandBaggageInformationFactoryTest {
     private static final String MY_COMPANY_OLD_HAND_BAGGAGE_POLICY = "<a target=\"_blank\" href=\"" + MY_COMPANY_OLD_HAND_BAGGAGE_LINK + "\">" + MY_COMPANY_OLD_HAND_BAGGAGE_LINK_MESSAGE + "</a>";
 
     private HandBaggageInformationFactory handBaggageInformationFactory;
-    private TranslationRepository translationRepository;
 
     @Before
     public void setUp() {
-        translationRepository = Mockito.mock(TranslationRepository.class);
-        handBaggageInformationFactory = new HandBaggageInformationFactory(new HandBaggagePoliciesFactory().make(translationRepository), new NotMyCompanyHandBaggageInformationFactory());
+        TranslationRepository translationRepository = Mockito.mock(TranslationRepository.class);
+        handBaggageInformationFactory = new HandBaggageInformationFactory(HandBaggagePoliciesFactory.make(translationRepository), new NotMyCompanyHandBaggageInformationFactory());
 
         when(translationRepository.retrieve("customer_area.hand_baggage_policy.label.my_company_id", A_RENDER_LANGUAGE))
                 .thenReturn(MY_COMPANY_OLD_HAND_BAGGAGE_LINK_MESSAGE);
