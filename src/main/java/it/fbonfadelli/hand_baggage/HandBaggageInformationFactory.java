@@ -44,10 +44,6 @@ public class HandBaggageInformationFactory {
             }
         }
 
-        if (myCompanyOneWayAfterTheFirstOfNovember.canHandle(flight)) {
-            return myCompanyOneWayAfterTheFirstOfNovember.getFrom(renderLanguage);
-        }
-
         if (myCompanyOneWayBeforeTheFirstOfNovember.canHandle(flight)) {
             return myCompanyOneWayBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
