@@ -28,11 +28,7 @@ public class HandBaggageInformationFactory {
         NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
                 new NotMyCompanyHandBaggageInformationFactory();
 
-        if (flight.isOneWay()
-                && isMyCompany(flight)
-                && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
-            return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
-        }
+        if (new MyCompanyOneWayAfterTheFirstOfNovember().canHandle(flight, flightOutboundDate)) return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
 
         if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
             return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
@@ -64,4 +60,11 @@ public class HandBaggageInformationFactory {
     }
 
 
+    private class MyCompanyOneWayAfterTheFirstOfNovember {
+        public boolean canHandle(Flight flight, LocalDateTime flightOutboundDate) {
+            return flight.isOneWay()
+                    && isMyCompany(flight)
+                    && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER);
+        }
+    }
 }
