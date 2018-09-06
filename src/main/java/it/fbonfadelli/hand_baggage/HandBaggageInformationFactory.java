@@ -20,18 +20,12 @@ public class HandBaggageInformationFactory {
 
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
-        if (flight.isOneWay()) {
-            LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
-            if (isMyCompany(flight)) {
-                if (flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
-                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
-                }
-
-            }
+        LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+        if (flight.isOneWay() && isMyCompany(flight) && flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+            return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
         }
 
         if (flight.isOneWay()) {
-            LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
             if (isMyCompany(flight)) {
                 if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
