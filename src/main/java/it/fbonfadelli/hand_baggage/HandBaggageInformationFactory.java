@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class HandBaggageInformationFactory {
-    private static final String MY_COMPANY_AIRLINE_ID = "MY_COMPANY_AIRLINE_ID";
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
     private static final LocalDate THIRTY_FIRST_OF_OCTOBER = LocalDate.of(2018, 10, 31);
 
@@ -54,7 +53,7 @@ public class HandBaggageInformationFactory {
     }
 
     private boolean isMyCompany(Flight flight) {
-        return flight.getAirlineIds().contains(MY_COMPANY_AIRLINE_ID);
+        return flight.isMyCompany();
     }
 
 

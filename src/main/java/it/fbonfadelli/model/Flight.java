@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 
 public class Flight {
+    private static final String MY_COMPANY_AIRLINE_ID = "MY_COMPANY_AIRLINE_ID";
+
     private int flightId;
     private Legs legs = new Legs();
 
@@ -58,5 +60,9 @@ public class Flight {
 
     public LocalDateTime getOutboundDepartureDate() {
         return getFirstLeg().getFirstHop().getDeparture().getDate();
+    }
+
+    public boolean isMyCompany() {
+        return getAirlineIds().contains(MY_COMPANY_AIRLINE_ID);
     }
 }
