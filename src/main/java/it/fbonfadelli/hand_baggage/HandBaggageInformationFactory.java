@@ -23,53 +23,35 @@ public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
         LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+        LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+        LocalDate returnDepartureDate = order.getReturnDepartureDate();
+
         if (flight.isOneWay()
                 && isMyCompany(flight)
                 && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
             return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
         }
 
-        if (flight.isOneWay()) {
-            if (isMyCompany(flight)) {
-                if (!flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
-                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
-                }
-            }
+        if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
+            return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
         }
 
-        if (flight.isOneWay()) {
-            if (!isMyCompany(flight)) {
+        if (flight.isOneWay() && !isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
-            }
         }
 
-        if (!flight.isOneWay()) {  //round trip
-            LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
-            LocalDate returnDepartureDate = order.getReturnDepartureDate();
-            if (isMyCompany(flight)) {
-                if (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
-                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)) {
-                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
-                }
-
-            }
-        }
-
-        if (!flight.isOneWay()) {  //round trip
-            LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
-            LocalDate returnDepartureDate = order.getReturnDepartureDate();
-            if (isMyCompany(flight)) {
-                if (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+        if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
                         || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
-                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
-                }
-            }
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
         }
 
-        if (!flight.isOneWay()) {  //round trip
-            if (!isMyCompany(flight)) {
+        if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)))) {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+        }
+
+        if (!flight.isOneWay() && !isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
-            }
         }
 
         return noMyCompanyInformationInfo();
