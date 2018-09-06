@@ -51,10 +51,6 @@ public class HandBaggageInformationFactory {
             return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
 
-        if (!isMyCompany(flight)) {
-            return notMyCompanyHandBaggageInformationFactory.make();
-        }
-
         return notMyCompanyHandBaggageInformationFactory.make();
     }
 
