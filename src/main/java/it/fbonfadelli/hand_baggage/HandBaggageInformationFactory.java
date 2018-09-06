@@ -11,6 +11,9 @@ import it.fbonfadelli.model.Flight;
 import it.fbonfadelli.model.Order;
 import it.fbonfadelli.translation.TranslationRepository;
 
+import java.util.Collections;
+import java.util.List;
+
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -22,14 +25,24 @@ public class HandBaggageInformationFactory {
         NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
                 new NotMyCompanyHandBaggageInformationFactory();
 
-        MyCompanyOneWayAfterTheFirstOfNovember myCompanyOneWayAfterTheFirstOfNovember =
+        HandBaggageInformationPolicy myCompanyOneWayAfterTheFirstOfNovember =
                 new MyCompanyOneWayAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-        MyCompanyOneWayBeforeTheFirstOfNovember myCompanyOneWayBeforeTheFirstOfNovember =
+        HandBaggageInformationPolicy myCompanyOneWayBeforeTheFirstOfNovember =
                 new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
-        MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
+        HandBaggageInformationPolicy myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
                 new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-        MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
+        HandBaggageInformationPolicy myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
                 MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
+
+        List<HandBaggageInformationPolicy> policies = Collections.singletonList(
+                myCompanyOneWayAfterTheFirstOfNovember
+        );
+
+        for (HandBaggageInformationPolicy policy : policies) {
+            if (policy.canHandle(flight)) {
+                return policy.getFrom(renderLanguage);
+            }
+        }
 
         if (myCompanyOneWayAfterTheFirstOfNovember.canHandle(flight)) {
             return myCompanyOneWayAfterTheFirstOfNovember.getFrom(renderLanguage);
