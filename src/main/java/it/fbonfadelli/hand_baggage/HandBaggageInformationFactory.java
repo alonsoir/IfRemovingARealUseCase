@@ -28,7 +28,9 @@ public class HandBaggageInformationFactory {
                 } else {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
                 }
-            } else {
+            }
+
+            if (!isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
             }
         }
@@ -43,7 +45,9 @@ public class HandBaggageInformationFactory {
                 } else {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
                 }
-            } else {
+            }
+
+            if (!isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
             }
         }
