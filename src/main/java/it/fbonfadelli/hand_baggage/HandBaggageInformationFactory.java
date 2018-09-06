@@ -36,7 +36,7 @@ public class HandBaggageInformationFactory {
 
         MyCompanyOneWayBeforeTheFirstOfNovember myCompanyOneWayBeforeTheFirstOfNovember =
                 new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
-        if (myCompanyOneWayBeforeTheFirstOfNovember.canHandle(flight, flightOutboundDate)) {
+        if (myCompanyOneWayBeforeTheFirstOfNovember.canHandle(flight)) {
             return myCompanyOneWayBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
 
@@ -87,8 +87,8 @@ public class HandBaggageInformationFactory {
             this.oldMyCompanyHandBaggageInformationFactory = oldMyCompanyHandBaggageInformationFactory;
         }
 
-        public boolean canHandle(Flight flight, LocalDateTime flightOutboundDate) {
-            return flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER);
+        public boolean canHandle(Flight flight) {
+            return flight.isOneWay() && isMyCompany(flight) && !flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
         }
 
         private HandBaggageInformation getFrom(String renderLanguage) {
