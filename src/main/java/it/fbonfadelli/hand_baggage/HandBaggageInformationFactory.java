@@ -72,31 +72,34 @@ public class HandBaggageInformationFactory {
         }
     }
 
-    private class MyCompanyOneWayBeforeTheFirstOfNovember {
+    private class MyCompanyOneWayBeforeTheFirstOfNovember implements HandBaggageInformationPolicy {
         private final OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory;
 
         private MyCompanyOneWayBeforeTheFirstOfNovember(OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory) {
             this.oldMyCompanyHandBaggageInformationFactory = oldMyCompanyHandBaggageInformationFactory;
         }
 
+        @Override
         public boolean canHandle(Flight flight) {
             return flight.isOneWay()
                     && flight.isMyCompany()
                     && !flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
         }
 
-        private HandBaggageInformation getFrom(String renderLanguage) {
+        @Override
+        public HandBaggageInformation getFrom(String renderLanguage) {
             return this.oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
     }
 
-    private class MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember {
+    private class MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
         private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
 
         public MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory) {
             this.newMyCompanyHandBaggageInformationFactory = newMyCompanyHandBaggageInformationFactory;
         }
 
+        @Override
         public boolean canHandle(Flight flight) {
             return !flight.isOneWay()
                     && flight.isMyCompany()
@@ -105,19 +108,21 @@ public class HandBaggageInformationFactory {
                     );
         }
 
+        @Override
         public HandBaggageInformation getFrom(String renderLanguage) {
             return this.newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
     }
 
-    private class MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember {
+    private class MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember implements HandBaggageInformationPolicy {
         private final OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory;
 
         private MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory) {
             this.oldMyCompanyHandBaggageInformationFactory = oldMyCompanyHandBaggageInformationFactory;
         }
 
-        private boolean canHandle(Flight flight) {
+        @Override
+        public boolean canHandle(Flight flight) {
             return !flight.isOneWay()
                     && flight.isMyCompany()
                     && (!(flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER)
@@ -125,6 +130,7 @@ public class HandBaggageInformationFactory {
                     );
         }
 
+        @Override
         public HandBaggageInformation getFrom(String renderLanguage) {
             return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
