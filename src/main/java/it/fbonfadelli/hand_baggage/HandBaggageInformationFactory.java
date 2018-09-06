@@ -73,26 +73,37 @@ public class HandBaggageInformationFactory {
     }
 
     private HandBaggageInformation newMyCompanyHandBaggageInformation(TranslationRepository translationRepository, String renderLanguage) {
-        return new HandBaggageInformation(
-                createHandBaggageAlert(translationRepository, renderLanguage),
-                false,
-                translationRepository.retrieve(MY_COMPANY_NEW_BAGGAGE_INFORMATION_LABEL, renderLanguage).replace("{{link}}", translationRepository.retrieve(MY_COMPANY_NEW_BAGGAGE_INFORMATION_LINK, renderLanguage))
-        );
+        return new NewMyCompanyHandBaggageInformationFactory(translationRepository).execute(renderLanguage);
     }
 
     private boolean isMyCompany(Flight flight) {
         return flight.getAirlineIds().contains(MY_COMPANY_AIRLINE_ID);
     }
 
-    private HandBaggageAlert createHandBaggageAlert(TranslationRepository translationRepository, String renderLanguage) {
-        HandBaggageAlert handBaggageAlert = new HandBaggageAlert();
-        handBaggageAlert.setTitle(translationRepository.retrieve(CUSTOMER_AREA_CIA_NEW_HAND_LUGGAGE_POLICY_ALERT_TITLE_FR, renderLanguage));
-        String message = translationRepository.retrieve(CUSTOMER_AREA_CIA_NEW_HAND_LUGGAGE_POLICY_ALERT_FR, renderLanguage);
-        String link = translationRepository.retrieve(MY_COMPANY_NEW_BAGGAGE_INFORMATION_LINK, renderLanguage);
-        String messageWithLink = message.replace("{{link}}", link);
-        handBaggageAlert.setMessage(messageWithLink);
-        return handBaggageAlert;
+
+    private static class NewMyCompanyHandBaggageInformationFactory {
+        private TranslationRepository translationRepository;
+
+        public NewMyCompanyHandBaggageInformationFactory(TranslationRepository translationRepository) {
+            this.translationRepository = translationRepository;
+        }
+
+        public HandBaggageInformation execute(String renderLanguage) {
+            return new HandBaggageInformation(
+                    createHandBaggageAlert(translationRepository, renderLanguage),
+                    false,
+                    translationRepository.retrieve(MY_COMPANY_NEW_BAGGAGE_INFORMATION_LABEL, renderLanguage).replace("{{link}}", translationRepository.retrieve(MY_COMPANY_NEW_BAGGAGE_INFORMATION_LINK, renderLanguage))
+            );
+        }
+
+        private HandBaggageAlert createHandBaggageAlert(TranslationRepository translationRepository, String renderLanguage) {
+            HandBaggageAlert handBaggageAlert = new HandBaggageAlert();
+            handBaggageAlert.setTitle(translationRepository.retrieve(CUSTOMER_AREA_CIA_NEW_HAND_LUGGAGE_POLICY_ALERT_TITLE_FR, renderLanguage));
+            String message = translationRepository.retrieve(CUSTOMER_AREA_CIA_NEW_HAND_LUGGAGE_POLICY_ALERT_FR, renderLanguage);
+            String link = translationRepository.retrieve(MY_COMPANY_NEW_BAGGAGE_INFORMATION_LINK, renderLanguage);
+            String messageWithLink = message.replace("{{link}}", link);
+            handBaggageAlert.setMessage(messageWithLink);
+            return handBaggageAlert;
+        }
     }
-
-
 }
