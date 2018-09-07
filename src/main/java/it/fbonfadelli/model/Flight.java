@@ -71,14 +71,18 @@ public class Flight {
     }
 
     public boolean hasAllTheDeparturesBefore(LocalDateTime aDate) {
-        return hasOutboundDepartureBefore(aDate) && (isOneWay() || isRoundTripWithReturnTakeoffBefore(aDate));
+        return !hasAtLeastOneDepartureAfter(aDate);
     }
 
-    private boolean hasOutboundDepartureBefore(LocalDateTime aDate) {
-        return getOutboundDepartureDate().isBefore(aDate);
+    public boolean hasAtLeastOneDepartureAfter(LocalDateTime aDate) {
+        return hasDepartureDateAfter(aDate) || isRoundTripWithReturnTakeOffAfter(aDate);
     }
 
-    private boolean isRoundTripWithReturnTakeoffBefore(LocalDateTime aDate) {
-        return !isOneWay() && getReturnDepartureDate().isBefore(aDate);
+    private boolean isRoundTripWithReturnTakeOffAfter(LocalDateTime aDate) {
+        return !isOneWay() && getReturnDepartureDate().isAfter(aDate);
+    }
+
+    private boolean hasDepartureDateAfter(LocalDateTime aDate) {
+        return getOutboundDepartureDate().isAfter(aDate);
     }
 }

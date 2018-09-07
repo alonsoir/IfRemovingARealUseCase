@@ -19,7 +19,7 @@ public class MyCompanyAtLeastOneDepartureAfterTheFirstOfNovember implements Hand
     @Override
     public boolean canHandle(Flight flight) {
         return flight.isMyCompany()
-                && !flight.hasAllTheDeparturesBefore(FIRST_OF_NOVEMBER);
+                && flight.hasAtLeastOneDepartureAfter(FIRST_OF_NOVEMBER);
     }
 
     @Override
