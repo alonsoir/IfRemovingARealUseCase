@@ -16,9 +16,9 @@ public class HandBaggagePoliciesFactory {
                 new OldMyCompanyHandBaggageInformationFactory(translationRepository);
 
         HandBaggageInformationPolicy myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
-                new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
+                new MyCompanyAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
         HandBaggageInformationPolicy myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
-                MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
+                MyCompanyAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
 
         return Arrays.asList(
                 myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,

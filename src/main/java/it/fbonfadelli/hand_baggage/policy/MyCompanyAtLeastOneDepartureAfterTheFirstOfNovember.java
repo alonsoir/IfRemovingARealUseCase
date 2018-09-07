@@ -7,12 +7,12 @@ import it.fbonfadelli.model.Flight;
 
 import java.time.LocalDateTime;
 
-public class MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
+public class MyCompanyAtLeastOneDepartureAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
 
     private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
 
-    public MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory) {
+    public MyCompanyAtLeastOneDepartureAfterTheFirstOfNovember(NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory) {
         this.newMyCompanyHandBaggageInformationFactory = newMyCompanyHandBaggageInformationFactory;
     }
 
