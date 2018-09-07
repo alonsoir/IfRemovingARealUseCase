@@ -69,4 +69,6 @@ public class Flight {
     public LocalDateTime getReturnDepartureDate() {
         return getReturnLeg().getFirstHop().getDeparture().getDate();
     }
+
+
 }
