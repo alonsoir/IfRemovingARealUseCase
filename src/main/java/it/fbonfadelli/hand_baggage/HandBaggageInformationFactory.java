@@ -23,7 +23,8 @@ public class HandBaggageInformationFactory {
     }
 
     private HandBaggageInformation handBaggageInformationFor(String renderLanguage, Flight flight) {
-        return handBaggageInformationPolicies.stream()
+        return handBaggageInformationPolicies
+                .stream()
                 .filter(policy -> policy.canHandle(flight))
                 .findFirst()
                 .map(policy -> policy.getFrom(renderLanguage))
