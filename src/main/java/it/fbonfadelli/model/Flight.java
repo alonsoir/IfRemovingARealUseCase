@@ -70,16 +70,15 @@ public class Flight {
         return getReturnLeg().getFirstHop().getDeparture().getDate();
     }
 
-
-    public boolean hasTheDepartureAfter(LocalDateTime aDate) {
-        return isOneWay() && getOutboundDepartureDate().isAfter(aDate);
+    public boolean hasAtLeastOneDepartureBefore(LocalDateTime aDate) {
+        return hasOutboundDepartureBefore(aDate) && (isOneWay() || isRoundTripWithReturnTakeoffAfter(aDate));
     }
 
-    public boolean hasTheDepartureBefore(LocalDateTime aDate) {
-        return (isOneWay() && !getOutboundDepartureDate().isAfter(aDate)) ||
-                (!isOneWay()
-                        && (!(getOutboundDepartureDate().isAfter(aDate)
-                        || getReturnDepartureDate().isAfter(aDate))
-                ));
+    private boolean hasOutboundDepartureBefore(LocalDateTime aDate) {
+        return !getOutboundDepartureDate().isAfter(aDate);
+    }
+
+    private boolean isRoundTripWithReturnTakeoffAfter(LocalDateTime aDate) {
+        return !(isOneWay() || getReturnDepartureDate().isAfter(aDate));
     }
 }

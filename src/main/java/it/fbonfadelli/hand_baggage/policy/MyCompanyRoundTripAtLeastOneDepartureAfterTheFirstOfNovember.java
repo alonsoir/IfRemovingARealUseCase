@@ -19,10 +19,7 @@ public class MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember implem
     @Override
     public boolean canHandle(Flight flight) {
         return flight.isMyCompany()
-                && !flight.isOneWay()
-                && (flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER)
-                || flight.getReturnDepartureDate().isAfter(FIRST_OF_NOVEMBER)
-        );
+                && !flight.hasAtLeastOneDepartureBefore(FIRST_OF_NOVEMBER);
     }
 
     @Override
