@@ -18,11 +18,8 @@ public class MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember implements 
 
     @Override
     public boolean canHandle(Flight flight) {
-        return !flight.isOneWay()
-                && flight.isMyCompany()
-                && (!(flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER)
-                    || flight.getReturnDepartureDate().isAfter(FIRST_OF_NOVEMBER))
-                );
+        return flight.isMyCompany()
+                && flight.hasTheDepartureBefore(FIRST_OF_NOVEMBER);
     }
 
     @Override
