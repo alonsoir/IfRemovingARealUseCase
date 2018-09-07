@@ -19,8 +19,7 @@ public class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInform
     @Override
     public boolean canHandle(Flight flight) {
         return flight.isMyCompany()
-                && flight.isOneWay()
-                && flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
+                && flight.hasTheDepartureAfter(FIRST_OF_NOVEMBER);
     }
 
     @Override

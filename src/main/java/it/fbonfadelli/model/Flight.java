@@ -71,4 +71,7 @@ public class Flight {
     }
 
 
+    public boolean hasTheDepartureAfter(LocalDateTime aDate) {
+        return isOneWay() && getOutboundDepartureDate().isAfter(aDate);
+    }
 }
