@@ -65,7 +65,7 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-## First step - flatten the if
+## First step: flatten the if structure
 The idea here is to transform the nested if structure into a sequence of flat ifs in order to isolate
 and explicit each single condition.  
 To do so with very small steps, we are going to remove all the `else` parts of the ifs, by transforming 
@@ -110,3 +110,5 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
+
+Once done this, we are going to proceed with the inner `if-else` conditions. 
