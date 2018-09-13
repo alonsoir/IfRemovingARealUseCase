@@ -28,5 +28,6 @@ to come back to the previous working version.
 All pf this, will allow us to keep the code strictly under control and avoid to introduce bugs.
 
 ##The initial code
+#### a6681dd
 Here you can find the code we were not very proud of. 
 In particular, I will report the nested if structure, which is the part we are going to refactor.
