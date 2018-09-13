@@ -112,4 +112,48 @@ public class HandBaggageInformationFactory {
 }
 ```
 
+#### 193aab6e25e83ba9c453b87961fb1582b0a63828
 Once done this, we are going to proceed with the inner `if-else` conditions. 
+```java
+public class HandBaggageInformationFactory {
+    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+        Flight flight = order.findFlight(flightId);
+        if (flight.isOneWay()) {
+            if (isMyCompany(flight)) {
+                LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+                if (flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                } else {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            }
+
+            if (!isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        if (!flight.isOneWay()) {  //round trip
+            if (isMyCompany(flight)) {
+                LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+                LocalDate returnDepartureDate = order.getReturnDepartureDate();
+                if (outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                } else {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            }
+
+            if (!isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        return noMyCompanyInformationInfo();
+    }
+}
+```
+
+#### d496798575f2ee7487f1f2a04d0ce124dbb921c2
+We proceed in this way until we have removed all the else from the code
