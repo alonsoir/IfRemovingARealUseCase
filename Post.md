@@ -537,6 +537,7 @@ public class HandBaggageInformationFactory {
 }
 ```
 
+#### 529ca3d37906d6c94ae3bb28ecf810e3f9e75e3b
 Then, we repeat the operation for all the condition but the ones that use our default value, which is the one 
 created with `notMyCompanyHandBaggageInformationFactory.make()`. 
 To be short here, we make every single condition to create different values, and join all the ones that creates the 
