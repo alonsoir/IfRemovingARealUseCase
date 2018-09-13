@@ -64,3 +64,49 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
+
+## First step - flatten the if
+The idea here is to transform the nested if structure into a sequence of flat ifs in order to isolate
+and explicit each single condition.  
+To do so with very small steps, we are going to remove all the `else` parts of the ifs, by transforming 
+each one into an if with the condition which is the negation of the original.
+In the following piece of code, you can notice how the outer if-else has become a couple of conditions, 
+one for the original condition `flight.isOneWay()` and the other one with the opposite condition `!flight.isOneWay()`
+
+```java
+public class HandBaggageInformationFactory {
+
+    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+        Flight flight = order.findFlight(flightId);
+        if (flight.isOneWay()) {
+            if (isMyCompany(flight)) {
+                LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+                if (flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                } else {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            } else {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        if (!flight.isOneWay()) {  //round trip
+            if (isMyCompany(flight)) {
+                LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+                LocalDate returnDepartureDate = order.getReturnDepartureDate();
+                if (outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                } else {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            } else {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        return noMyCompanyInformationInfo();
+    }
+}
+```
