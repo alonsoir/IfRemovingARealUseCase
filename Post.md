@@ -304,3 +304,63 @@ public class HandBaggageInformationFactory {
     }
 }
 ``` 
+
+#### 5419c7d777f7562f89c65d55a83181b787a7c9eb,3b6651b149932befca35c40a02c4bbd79cfab8d9 and ed33c4490bccfc828391516c12561b83d0428000  
+Before keeping on with the extraction of the chain of responsibility from the if structure, we will make some intermediate steps. 
+In order to reduce the responsibilities of the `HandBaggageInformationFactory`, here, 
+we are going to extract three factories, each one responsible for creating a specific `HandBaggageInformation`.
+Without diving into the code used to create the object, we just extract the `NewMyCompanyHandBaggageInformationFactory`,
+out of the method `newMyCompanyHandBaggageInformation`.
+If you are using IDEA, an easy way is to do it is to use the `Extract method object` feature of the IDE. 
+I won't explain how to do it here, because it is out of the scope of this topic, but I have just realized I have found 
+the next topic of my blog (this is great! isn't it? ;)). 
+ 
+```java
+public class HandBaggageInformationFactory {
+    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+        Flight flight = order.findFlight(flightId);
+        LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+        LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+        LocalDate returnDepartureDate = order.getReturnDepartureDate();
+
+        NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
+                new NewMyCompanyHandBaggageInformationFactory(translationRepository);
+
+        if (flight.isOneWay()
+                && isMyCompany(flight)
+                && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
+            return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
+        }
+
+        if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
+            return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+        }
+
+        if (flight.isOneWay() && !isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+        }
+
+        if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
+            return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
+        }
+
+        if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)))) {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+        }
+
+        if (!flight.isOneWay() && !isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+        }
+
+        return noMyCompanyInformationInfo();
+    }
+}
+```
+
+#### 71a7962d72ffa2581beef76c494f2389f0526059
+Once done this, we repeat the operation for the other two methods that create the objects, obtaining the 
+`NotMyCompanyHandBaggageInformationFactory` and the `OldMyCompanyHandBaggageInformationFactory`.
+
+
