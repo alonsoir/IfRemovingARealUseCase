@@ -113,7 +113,7 @@ public class HandBaggageInformationFactory {
 ```
 
 #### 193aab6e25e83ba9c453b87961fb1582b0a63828
-Once done this, we are going to proceed with the inner `if-else` conditions. 
+Once done this, we are going to proceed with the inner `if-else` conditions, which is `isMyCompany(flight)`. 
 ```java
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
@@ -156,8 +156,8 @@ public class HandBaggageInformationFactory {
 ```
 
 #### d496798575f2ee7487f1f2a04d0ce124dbb921c2
-We proceed in this way until we have removed all the else from the code. 
-Notice that, here, you are not forced to start from the outside but you can start from whenever you want to remove the else.  
+We proceed in this way until we have removed all the `else` conditions from the code. 
+Notice that, here, you are not forced to start from the outside, but you can choose whatever position you prefer to start with.  
 ```java
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
@@ -203,3 +203,103 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
+
+#### 623019ec167ea7a0e6e5c0b0057d2bf8a83da9f1
+Once removed all the `else`, we are going to duplicate the conditions 
+in order to have only one condition inside another condition.  
+We start with `isMyCompany(flight)` in case of one way flight.   
+```java
+public class HandBaggageInformationFactory {
+    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+        Flight flight = order.findFlight(flightId);
+        if (flight.isOneWay()) {
+            LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+            if (isMyCompany(flight)) {
+                if (flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                }
+
+            }
+            if (isMyCompany(flight)) {
+                if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            }
+
+            if (!isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        if (!flight.isOneWay()) {  //round trip
+            LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+            LocalDate returnDepartureDate = order.getReturnDepartureDate();
+            if (isMyCompany(flight)) {
+                if (outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                }
+
+            }
+            if (isMyCompany(flight)) {
+                if (!(outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31)))) {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            }
+
+            if (!isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        return noMyCompanyInformationInfo();
+    }
+}
+```  
+
+#### 82d8c21bf684feeaf6d342a7b6f36409bd30acb6
+After having done this process for all the if conditions we will finally get the flatten if structure
+```java
+public class HandBaggageInformationFactory {
+    private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
+    private static final LocalDate THIRTY_FIRST_OF_OCTOBER = LocalDate.of(2018, 10, 31);
+
+    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+        Flight flight = order.findFlight(flightId);
+        LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+        LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+        LocalDate returnDepartureDate = order.getReturnDepartureDate();
+
+        if (flight.isOneWay()
+                && isMyCompany(flight)
+                && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
+            return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+        }
+
+        if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
+            return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+        }
+
+        if (flight.isOneWay() && !isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+        }
+
+        if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+        }
+
+        if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
+                        || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)))) {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+        }
+
+        if (!flight.isOneWay() && !isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+        }
+
+        return noMyCompanyInformationInfo();
+    }
+}
+``` 
