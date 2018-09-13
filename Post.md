@@ -2,9 +2,9 @@
 # Refactoring - A real case of a nested if structure transformed into a chain of responsibility
 In this post I describe step by step a process used to transform 
 a nested if structure into a chain of responsibility. 
-The code used in this post is based on a real piece of code used to satisfy a real business need 
-(we just removed the business related details).
-
+The code used in this post is based on a real piece of code used to satisfy a real business need, 
+we just removed the business related details.
+The language used is java.
 
 ## The need
 It seemed a normal day of work when one of our managers called a meeting 
@@ -15,3 +15,18 @@ meetings that continuously interrupt us,
 we produced a code that basically "worked", but it was a bit chaotic. 
 Luckily we were able at least to write the tests.
 
+## The process
+We are going to see a step by step refactor of a specific class 
+that transform the if nested structure into a chain of responsibility.
+We are not going to change the tests.
+The idea behind this refactor is to proceed with small steps, 
+possibly using the IDE functionality (I used IDEA that allows very good), 
+and run the tests after every operation.
+Also, after each step, there is a commit so that, in case of errors 
+(and they already happen), you can just use ```git checkout .``` 
+to come back to the previous working version. 
+All pf this, will allow us to keep the code strictly under control and avoid to introduce bugs.
+
+##The initial code
+Here you can find the code we were not very proud of. 
+In particular, I will report the nested if structure, which is the part we are going to refactor.
