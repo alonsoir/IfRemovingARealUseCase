@@ -156,4 +156,50 @@ public class HandBaggageInformationFactory {
 ```
 
 #### d496798575f2ee7487f1f2a04d0ce124dbb921c2
-We proceed in this way until we have removed all the else from the code
+We proceed in this way until we have removed all the else from the code. 
+Notice that, here, you are not forced to start from the outside but you can start from whenever you want to remove the else.  
+```java
+public class HandBaggageInformationFactory {
+    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+        Flight flight = order.findFlight(flightId);
+        if (flight.isOneWay()) {
+            if (isMyCompany(flight)) {
+                LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+                if (flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                }
+
+                if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            }
+
+            if (!isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        if (!flight.isOneWay()) {  //round trip
+            if (isMyCompany(flight)) {
+                LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+                LocalDate returnDepartureDate = order.getReturnDepartureDate();
+                if (outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                }
+
+                if (!(outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31)))) {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            }
+
+            if (!isMyCompany(flight)) {
+                return noMyCompanyInformationInfo();
+            }
+        }
+
+        return noMyCompanyInformationInfo();
+    }
+}
+```
