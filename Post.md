@@ -259,7 +259,8 @@ public class HandBaggageInformationFactory {
 ```  
 
 #### 82d8c21bf684feeaf6d342a7b6f36409bd30acb6
-After having done this process for all the if conditions we will finally get the flatten if structure
+After having done this process for all the if conditions,
+ we will finally get the flatten if structure
 ```java
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
