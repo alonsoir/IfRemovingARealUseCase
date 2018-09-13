@@ -31,3 +31,36 @@ All pf this, will allow us to keep the code strictly under control and avoid to 
 #### a6681dd
 Here you can find the code we were not very proud of. 
 In particular, I will report the nested if structure, which is the part we are going to refactor.
+```java
+public class HandBaggageInformationFactory {
+
+    public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
+        Flight flight = order.findFlight(flightId);
+        if (flight.isOneWay()) {
+            if (isMyCompany(flight)) {
+                LocalDateTime flightOutboundDate = flight.getFirstLeg().getFirstHop().getDeparture().getDate();
+                if (flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                } else {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            } else {
+                return noMyCompanyInformationInfo();
+            }
+        } else { //round trip
+            if (isMyCompany(flight)) {
+                LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
+                LocalDate returnDepartureDate = order.getReturnDepartureDate();
+                if (outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31))) {
+                    return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
+                } else {
+                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+                }
+            } else {
+                return noMyCompanyInformationInfo();
+            }
+        }
+    }
+}
+```
