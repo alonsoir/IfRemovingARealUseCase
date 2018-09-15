@@ -574,12 +574,12 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-Then, we repeat the operation for all the conditions but the ones that use our default value, which is the one 
+Then, we repeat the operation for all the conditions except for the ones that use our default value, the one 
 created with `notMyCompanyHandBaggageInformationFactory.make()`. 
-To be short here, we make every single condition to create different values, and join all the ones that create the 
+To be short here, we make every single condition create different values, and join all the ones that create the 
 default one into the default behavior. So we won't extract any class for that. 
 I skip this logic, because it's not so interesting but there are commits that show this step by step. 
-The resulting code, after having extracted the conditions, is the following.
+The resulting code, after having extracted the conditions, is the following. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/529ca3d37906d6c94ae3bb28ecf810e3f9e75e3b/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
@@ -693,7 +693,6 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/529ca3d37906d6c94ae3bb28ecf810e3f9e75e3b/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 ### 3 - Create a common signature to extract the chain item
 With another intermediate step, we are going to simplify again the code. 
