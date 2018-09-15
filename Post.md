@@ -830,10 +830,11 @@ public class HandBaggageInformationFactory {
 By watching closely all the extracted conditions after the simplifications made, 
 you can notice that now all the items has a common method signature.
 And if you think that is time of an interface, you are totally right. 
-So, thanks again to Idea, we can easily extract an interface from one of our conditions, 
-for example `MyCompanyOneWayAfterTheFirstOfNovember`.
-If you use Idea, `Extract interface` can be helpful.
-```java
+So, we can easily extract an interface from one of our conditions, 
+for example `MyCompanyOneWayAfterTheFirstOfNovember`. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/3e1cac2443d4bd5b0929917b2fc95808a21bc9ca/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+If you use Idea, its `Extract interface` feature can be helpful.
+
+```diff
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
 
@@ -875,8 +876,8 @@ public class HandBaggageInformationFactory {
         return notMyCompanyHandBaggageInformationFactory.make();
     }
 
-
-    private class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
+-   private class MyCompanyOneWayAfterTheFirstOfNovember {
++   private class MyCompanyOneWayAfterTheFirstOfNovember implements HandBaggageInformationPolicy {
 
         private final NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory;
 
@@ -884,14 +885,14 @@ public class HandBaggageInformationFactory {
             this.newMyCompanyHandBaggageInformationFactory = newMyCompanyHandBaggageInformationFactory;
         }
 
-        @Override
++       @Override
         public boolean canHandle(Flight flight) {
             return flight.isOneWay()
                     && flight.isMyCompany()
                     && flight.getOutboundDepartureDate().isAfter(FIRST_OF_NOVEMBER);
         }
 
-        @Override
++       @Override
         public HandBaggageInformation getFrom(String renderLanguage) {
             return this.newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
@@ -955,10 +956,16 @@ public class HandBaggageInformationFactory {
         }
     }
 }
-``` 
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/3e1cac2443d4bd5b0929917b2fc95808a21bc9ca/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
-And then, unfortunately Idea won't help us in this, we are going to make all the conditions implement the interface `HandBaggageInformationPolicy` 
++public interface HandBaggageInformationPolicy {
++   boolean canHandle(Flight flight);
++   HandBaggageInformation getFrom(String renderLanguage);
++}
+```
+
+And then, we are going to make all the conditions implement the interface `HandBaggageInformationPolicy`.
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/9cf7b408ff15217894b3e101b47886f8ce993a97/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+Unfortunately Idea won't help us in this. 
 ```java
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
@@ -1054,7 +1061,6 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/9cf7b408ff15217894b3e101b47886f8ce993a97/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 Then it's time to extract each policy into its own file and move all the policies into a package, 
 that for the sake of fanciful names, we will call `policy`. 
