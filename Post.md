@@ -1067,12 +1067,19 @@ public class HandBaggageInformationFactory {
 ```
 
 Then it's time to extract each policy into its own file and move all the policies into a package, 
-that for the sake of fanciful names, we will call `policy`. 
-To do this, we need to duplicate our threshold into more than one policy implementation. 
-This could be arguable because it is a duplication. Yes, actually it is. But in our real case problem, 
-the date will pass soon, wo we applied the ostrich algorithm (i.e. we ignored this discussion).  
-Also we decide to move the creation of all the policies before the evaluation, for a reason you will understand in the next step.
-```java
+that, for the sake of giving meaningful names, we will call `policy`. 
+To do this, we need to duplicate our threshold constant into more than one policy implementation. 
+
+This could be arguable because it is a duplication. 
+Of course, there are alternatives to this, like making the constant public, but then we have the problem 
+to decide where to put it.  
+So, given the nature of our real case problem, in which the date will pass soon, we decide to apply the ostrich algorithm 
+(i.e. we are ignore this discussion) and prefer duplication over other alternatives.   
+
+Also we move the creation of all the policies before the evaluation, for a reason you will understand in the next step.
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/66da72572de64865537c8baf8f24499ee6b841b7/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -1086,26 +1093,32 @@ public class HandBaggageInformationFactory {
 
         MyCompanyOneWayAfterTheFirstOfNovember myCompanyOneWayAfterTheFirstOfNovember =
                 new MyCompanyOneWayAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-        MyCompanyOneWayBeforeTheFirstOfNovember myCompanyOneWayBeforeTheFirstOfNovember =
-                new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
-        MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
-                new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-        MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
-                MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
++       MyCompanyOneWayBeforeTheFirstOfNovember myCompanyOneWayBeforeTheFirstOfNovember =
++               new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
++       MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
++               new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
++       MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
++               MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
 
         if (myCompanyOneWayAfterTheFirstOfNovember.canHandle(flight)) {
             return myCompanyOneWayAfterTheFirstOfNovember.getFrom(renderLanguage);
         }
 
+-       MyCompanyOneWayBeforeTheFirstOfNovember myCompanyOneWayBeforeTheFirstOfNovember =
+-               new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
         if (myCompanyOneWayBeforeTheFirstOfNovember.canHandle(flight)) {
             return myCompanyOneWayBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
 
+-       MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
+-               new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
         if (myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember.canHandle(flight)) {
             return myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember
                     .getFrom(renderLanguage);
         }
 
+-       MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
+-               MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
         if (myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.canHandle(flight)) {
             return myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.getFrom(renderLanguage);
         }
@@ -1114,9 +1127,8 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/66da72572de64865537c8baf8f24499ee6b841b7/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
-### 6 - Inject the chain at construction time
+### 5 - Inject the chain at construction time
 
 And then we create a loop of policies and move all of them inside the loop, so we have removed the chain of `if`.
 ```java
