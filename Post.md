@@ -27,6 +27,9 @@ Also, after each step, there is a commit so that, in case of errors
 to come back to the previous working version. 
 All of this, will allow us to keep the code strictly under control and avoid to introduce bugs during the refactoring.
 
+I will use the diff syntax to show the differences between some pieces of code. 
+Please keep in mind that I will use it in order to highlight *only the main differences* 
+between one commit and the other and it won't be the exact diff you can perform with git.
 ## The initial code
 Here you can find the code we were not very proud of. 
 In particular, I will report the nested if structure, which is the part we are going to refactor.
@@ -114,7 +117,7 @@ public class HandBaggageInformationFactory {
 
 Once done this, we are going to proceed with the inner `if-else` conditions, which is `isMyCompany(flight)`.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/193aab6e25e83ba9c453b87961fb1582b0a63828/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)) 
-```diff
+```diff 
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
