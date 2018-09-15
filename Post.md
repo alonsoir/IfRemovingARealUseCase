@@ -696,12 +696,13 @@ public class HandBaggageInformationFactory {
 
 ### 3 - Create a common signature to extract the chain item
 With another intermediate step, we are going to simplify again the code. 
-I am not going to explain in detail this part because it's more domain oriented 
-but I need to show the differences in order to justify the modifications on the code you will notice. 
-Just notice that the `Order` passed into some conditions has the same data as the `Flight` so we remove it. 
-Also, we perform some simplifications on the dates, basically we keep only one date, which is our threshold. 
-Finally, we move some operations from the HandBaggageInformationFactory class to the Flight one, which is more
-domain oriented.
+The purpose here is to obtain a common signature for all the conditions we have just extracted.   
+As this part is more domain oriented I am not diving into the details.   
+Just notice the three main modifications: 
+* the `Order` passed into some conditions has the same data as the `Flight`, so we remove the `Order` class in favour of the `Flight` class. 
+* keep only one date, which is our threshold date, by playing a bit with `isAfter()` and `isBefore()`. 
+* move some operations from the `HandBaggageInformationFactory` class to the `Flight` one, which is more
+domain oriented. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/7936f7daf9d01d4139b0fcda9980078978009d7a/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 So, after these operations the code looks like
 ```java
 public class HandBaggageInformationFactory {
@@ -823,8 +824,7 @@ public class HandBaggageInformationFactory {
         }
     }
 }
-``` 
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/7936f7daf9d01d4139b0fcda9980078978009d7a/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java) 
+```  
 
 ### 4 - Extracting the interface of the chain item
 By watching closely all the extracted conditions after the simplifications made, 
