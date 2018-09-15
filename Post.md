@@ -326,11 +326,15 @@ In order to reduce the responsibilities of the `HandBaggageInformationFactory`, 
 we are going to extract three factories, each one responsible for creating a specific `HandBaggageInformation`.
 Without diving into the code used to create the object, we just extract the `NewMyCompanyHandBaggageInformationFactory`,
 out of the method `newMyCompanyHandBaggageInformation`.
+([Step 1](https://github.com/bonfa/IfRemovingARealUseCase/blob/5419c7d777f7562f89c65d55a83181b787a7c9eb/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java),
+[Step 2](https://github.com/bonfa/IfRemovingARealUseCase/blob/3b6651b149932befca35c40a02c4bbd79cfab8d9/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
+and [Step 3](https://github.com/bonfa/IfRemovingARealUseCase/blob/ed33c4490bccfc828391516c12561b83d0428000/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+
 If you are using IDEA, an easy way is to do it is to use its `Extract method object` feature. 
 I won't explain how to do it here, because it is out of the scope of this topic, but I have just realized I have found 
 the next topic of my blog (this is great! isn't it? ;)). 
  
-```java
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -338,13 +342,14 @@ public class HandBaggageInformationFactory {
         LocalDateTime outboundDepartureDate = order.getOutboundDepartureDate();
         LocalDate returnDepartureDate = order.getReturnDepartureDate();
 
-        NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
-                new NewMyCompanyHandBaggageInformationFactory(translationRepository);
++        NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
++                new NewMyCompanyHandBaggageInformationFactory(translationRepository);
 
         if (flight.isOneWay()
                 && isMyCompany(flight)
                 && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
-            return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
+-             return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
++            return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
         }
 
         if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
@@ -357,7 +362,8 @@ public class HandBaggageInformationFactory {
 
         if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
                         || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
-            return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
+-           return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
++           return newMyCompanyHandBaggageInformationFactory.execute(renderLanguage);
         }
 
         if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
@@ -373,13 +379,11 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
->[Step 1](https://github.com/bonfa/IfRemovingARealUseCase/blob/5419c7d777f7562f89c65d55a83181b787a7c9eb/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java),
-[Step 2](https://github.com/bonfa/IfRemovingARealUseCase/blob/3b6651b149932befca35c40a02c4bbd79cfab8d9/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
-and [Step 3](https://github.com/bonfa/IfRemovingARealUseCase/blob/ed33c4490bccfc828391516c12561b83d0428000/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 Once done this, we repeat the operation for the other two methods that create the objects, obtaining the 
 `NotMyCompanyHandBaggageInformationFactory` and the `OldMyCompanyHandBaggageInformationFactory`.
-```java
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/71a7962d72ffa2581beef76c494f2389f0526059/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -389,44 +393,48 @@ public class HandBaggageInformationFactory {
 
         NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
                 new NewMyCompanyHandBaggageInformationFactory(translationRepository);
-        OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory =
-                new OldMyCompanyHandBaggageInformationFactory(translationRepository);
-        NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
-                new NotMyCompanyHandBaggageInformationFactory();
++       OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory =
++               new OldMyCompanyHandBaggageInformationFactory(translationRepository);
++       NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
++               new NotMyCompanyHandBaggageInformationFactory();
 
         if (flight.isOneWay()
                 && isMyCompany(flight)
                 && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
-            return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+              return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
 
         if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
-            return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+-            return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);        
++            return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
 
         if (flight.isOneWay() && !isMyCompany(flight)) {
-            return notMyCompanyHandBaggageInformationFactory.make();
+-            return noMyCompanyInformationInfo();        
++            return notMyCompanyHandBaggageInformationFactory.make();
         }
 
         if (!flight.isOneWay() && isMyCompany(flight) && (outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
                         || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER))) {
-            return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+             return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
 
         if (!flight.isOneWay() && isMyCompany(flight) && (!(outboundDepartureDate.isAfter(FIRST_OF_NOVEMBER)
                         || returnDepartureDate.isAfter(THIRTY_FIRST_OF_OCTOBER)))) {
-            return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+-            return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
++            return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
         }
 
         if (!flight.isOneWay() && !isMyCompany(flight)) {
-            return notMyCompanyHandBaggageInformationFactory.make();
+-            return noMyCompanyInformationInfo();
++            return notMyCompanyHandBaggageInformationFactory.make();
         }
 
-        return notMyCompanyHandBaggageInformationFactory.make();
+-       return noMyCompanyInformationInfo();
++       return notMyCompanyHandBaggageInformationFactory.make();
     }
 }
 ```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/71a7962d72ffa2581beef76c494f2389f0526059/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 ### 2 - Creating the components of the chain
 
