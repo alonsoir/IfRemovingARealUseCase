@@ -835,6 +835,12 @@ for example `MyCompanyOneWayAfterTheFirstOfNovember`. ([Source code](https://git
 If you use Idea, its `Extract interface` feature can be helpful.
 
 ```diff
++   public interface HandBaggageInformationPolicy {
++       boolean canHandle(Flight flight);
++       HandBaggageInformation getFrom(String renderLanguage);
++   }
+
+
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
 
@@ -956,11 +962,6 @@ public class HandBaggageInformationFactory {
         }
     }
 }
-
-+public interface HandBaggageInformationPolicy {
-+   boolean canHandle(Flight flight);
-+   HandBaggageInformation getFrom(String renderLanguage);
-+}
 ```
 
 And then, we are going to make all the conditions implement the interface `HandBaggageInformationPolicy`.
