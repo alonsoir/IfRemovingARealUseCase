@@ -1129,8 +1129,11 @@ public class HandBaggageInformationFactory {
 
 ### 5 - Inject the chain at construction time
 
-And then we create a loop of policies and move all of them inside the loop, so we have removed the chain of `if`.
-```java
+Now that we have all the policies created at the same point of our code, we can put all of them inside a list, 
+loop over the list and just apply the first policy satisfying the condition. 
+In this way, we remove the chain of `if` in favour of a chain of responsibility. 
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/4320112c0b1080ad59d89af2ea530c10f47ba57c/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -1151,27 +1154,42 @@ public class HandBaggageInformationFactory {
         HandBaggageInformationPolicy myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
                 MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
 
-        List<HandBaggageInformationPolicy> policies = Arrays.asList(
-                myCompanyOneWayAfterTheFirstOfNovember,
-                myCompanyOneWayBeforeTheFirstOfNovember,
-                myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,
-                myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
-        );
++       List<HandBaggageInformationPolicy> policies = Arrays.asList(
++               myCompanyOneWayAfterTheFirstOfNovember,
++               myCompanyOneWayBeforeTheFirstOfNovember,
++               myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,
++               myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
++       );
++
++       for (HandBaggageInformationPolicy policy : policies) {
++           if (policy.canHandle(flight)) {
++               return policy.getFrom(renderLanguage);
++           }
++       }
 
-        for (HandBaggageInformationPolicy policy : policies) {
-            if (policy.canHandle(flight)) {
-                return policy.getFrom(renderLanguage);
-            }
-        }
+-       if (myCompanyOneWayAfterTheFirstOfNovember.canHandle(flight)) {
+-           return myCompanyOneWayAfterTheFirstOfNovember.getFrom(renderLanguage);
+-       }
+-       
+-       if (myCompanyOneWayBeforeTheFirstOfNovember.canHandle(flight)) {
+-           return myCompanyOneWayBeforeTheFirstOfNovember.getFrom(renderLanguage);
+-       }
+-       
+-       if (myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember.canHandle(flight)) {
+-           return myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember
+-                           .getFrom(renderLanguage);
+-       }
+-       if (myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.canHandle(flight)) {
+-           return myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember.getFrom(renderLanguage);
+-       }
 
         return notMyCompanyHandBaggageInformationFactory.make();
     }
 }
 ```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/4320112c0b1080ad59d89af2ea530c10f47ba57c/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 If you prefer, you can use a stream instead of a classical loop
-```java
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -1198,17 +1216,23 @@ public class HandBaggageInformationFactory {
                 myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,
                 myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
         );
+        
++       return policies.stream()
++               .filter(policy -> policy.canHandle(flight))
++               .findFirst()
++               .map(policy -> policy.getFrom(renderLanguage))
++               .orElse(notMyCompanyHandBaggageInformationFactory.make());
 
-
-        return policies.stream()
-                .filter(policy -> policy.canHandle(flight))
-                .findFirst()
-                .map(policy -> policy.getFrom(renderLanguage))
-                .orElse(notMyCompanyHandBaggageInformationFactory.make());
+-       for (HandBaggageInformationPolicy policy : policies) {
+-           if (policy.canHandle(flight)) {
+-               return policy.getFrom(renderLanguage);
+-           }
+-       }
+-        
+-       return notMyCompanyHandBaggageInformationFactory.make();
     }
 }
 ```
-
 
 Now we are going to use again the `Extract method object` feature of the IDE (I know, it's getting kind of repetitive) 
 in order to extract the `HandBaggagePoliciesFactory` object, which is responsible for creating the policies.
@@ -1354,3 +1378,6 @@ public class HandBaggageInformationFactoryTest {
 
 ## Conclusion
 todo
+
+
+todo - add why you want to use a chain instead of ifs.
