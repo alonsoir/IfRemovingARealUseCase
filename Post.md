@@ -438,11 +438,11 @@ public class HandBaggageInformationFactory {
 
 ### 2 - Creating the components of the chain
 
-By using again the `Extract method object feature` of Idea, you can easily extract the first condition into a class.
+By using again the `Extract method object` feature of Idea, you can easily extract the first condition into a class.
 In this way we get `new MyCompanyOneWayAfterTheFirstOfNovember().canHandle(flight, flightOutboundDate)` in the first 
-`if` condition.
+`if` condition. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/6767ecfcbc8b1f90f38f525c2d2d7522d25fafb4/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 
-```java
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -457,7 +457,15 @@ public class HandBaggageInformationFactory {
         NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
                 new NotMyCompanyHandBaggageInformationFactory();
 
-        if (new MyCompanyOneWayAfterTheFirstOfNovember().canHandle(flight, flightOutboundDate)) return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+-       if (flight.isOneWay()
+-               && isMyCompany(flight)
+-               && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
+-             return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+-       }
+        
++       if (new MyCompanyOneWayAfterTheFirstOfNovember().canHandle(flight, flightOutboundDate)) { 
++           return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
++       }
 
         if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
             return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
@@ -484,20 +492,19 @@ public class HandBaggageInformationFactory {
         return notMyCompanyHandBaggageInformationFactory.make();
     }
 
-    private class MyCompanyOneWayAfterTheFirstOfNovember {
-        public boolean canHandle(Flight flight, LocalDateTime flightOutboundDate) {
-            return flight.isOneWay()
-                    && isMyCompany(flight)
-                    && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER);
-        }
-    }
++   private class MyCompanyOneWayAfterTheFirstOfNovember {
++       public boolean canHandle(Flight flight, LocalDateTime flightOutboundDate) {
++           return flight.isOneWay()
++                   && isMyCompany(flight)
++                   && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER);
++       }
++   }
 }
 ```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/6767ecfcbc8b1f90f38f525c2d2d7522d25fafb4/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 And, after that, we can move `newMyCompanyHandBaggageInformationFactory.from(renderLanguage)` inside 
 `MyCompanyOneWayAfterTheFirstOfNovember`. 
-```java
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -512,11 +519,14 @@ public class HandBaggageInformationFactory {
         NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
                 new NotMyCompanyHandBaggageInformationFactory();
 
-        MyCompanyOneWayAfterTheFirstOfNovember myCompanyOneWayAfterTheFirstOfNovember =
-                        new MyCompanyOneWayAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-                if (myCompanyOneWayAfterTheFirstOfNovember.canHandle(flight, flightOutboundDate)) {
-                    return myCompanyOneWayAfterTheFirstOfNovember.getFrom(renderLanguage);
-                }
+-       if (new MyCompanyOneWayAfterTheFirstOfNovember().canHandle(flight, flightOutboundDate)) { 
+-           return newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
+-       }
++        MyCompanyOneWayAfterTheFirstOfNovember myCompanyOneWayAfterTheFirstOfNovember =
++                        new MyCompanyOneWayAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
++                if (myCompanyOneWayAfterTheFirstOfNovember.canHandle(flight, flightOutboundDate)) {
++                    return myCompanyOneWayAfterTheFirstOfNovember.getFrom(renderLanguage);
++                }
 
         if (flight.isOneWay() && isMyCompany(flight) && !flightOutboundDate.isAfter(FIRST_OF_NOVEMBER)) {
             return oldMyCompanyHandBaggageInformationFactory.from(renderLanguage);
@@ -557,9 +567,9 @@ public class HandBaggageInformationFactory {
                         && flightOutboundDate.isAfter(FIRST_OF_NOVEMBER);
         }
     
-        public HandBaggageInformation getFrom(String renderLanguage) {
-                return this.newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
-        }
++       public HandBaggageInformation getFrom(String renderLanguage) {
++               return this.newMyCompanyHandBaggageInformationFactory.from(renderLanguage);
++       }
     }
 }
 ```
