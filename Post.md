@@ -275,7 +275,7 @@ public class HandBaggageInformationFactory {
 ```  
 
 After having done this process for all the if conditions,
- we will finally get the flatten if structure
+ we will finally get the flat if structure. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/82d8c21bf684feeaf6d342a7b6f36409bd30acb6/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
@@ -318,8 +318,7 @@ public class HandBaggageInformationFactory {
         return noMyCompanyInformationInfo();
     }
 }
-``` 
->[Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/82d8c21bf684feeaf6d342a7b6f36409bd30acb6/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
+```
 
 ### Intermediate step - Extracting factories
 Before keeping on with the extraction of the chain of responsibility from the if structure, we will make some intermediate steps. 
@@ -327,7 +326,7 @@ In order to reduce the responsibilities of the `HandBaggageInformationFactory`, 
 we are going to extract three factories, each one responsible for creating a specific `HandBaggageInformation`.
 Without diving into the code used to create the object, we just extract the `NewMyCompanyHandBaggageInformationFactory`,
 out of the method `newMyCompanyHandBaggageInformation`.
-If you are using IDEA, an easy way is to do it is to use the `Extract method object` feature of the IDE. 
+If you are using IDEA, an easy way is to do it is to use its `Extract method object` feature. 
 I won't explain how to do it here, because it is out of the scope of this topic, but I have just realized I have found 
 the next topic of my blog (this is great! isn't it? ;)). 
  
