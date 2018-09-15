@@ -159,7 +159,8 @@ public class HandBaggageInformationFactory {
 ```
 
 We proceed in this way until we have removed all the `else` conditions from the code. 
-Notice that, here, you are not forced to start from the outside, but you can choose whatever position you prefer to start with.  
+Notice that, here, you are not forced to start from the outside, but you can choose whatever position you prefer to start with.
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/d496798575f2ee7487f1f2a04d0ce124dbb921c2/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))  
 ```java
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
@@ -205,13 +206,15 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
->[Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/d496798575f2ee7487f1f2a04d0ce124dbb921c2/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 
-Once removed all the `else`, we are going to duplicate the conditions 
-in order to have only one condition inside another condition.  
-We start with `isMyCompany(flight)` in case of one way flight.   
-```java
+Once removed all the `else`, we are going to duplicate some conditions 
+in order to have only one `if` clause inside another `if`. 
+At a first glance, it could seem complicated to understand 
+but it is actually pretty simple. 
+We start by duplicating `isMyCompany(flight)` in the two external `if` clauses. 
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/623019ec167ea7a0e6e5c0b0057d2bf8a83da9f1/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)) 
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -222,12 +225,16 @@ public class HandBaggageInformationFactory {
                     return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
                 }
 
+-               if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
+-                   return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+-               }
             }
-            if (isMyCompany(flight)) {
-                if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
-                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
-                }
-            }
+            
++           if (isMyCompany(flight)) {
++               if (!flightOutboundDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))) {
++                   return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
++               }
++           }
 
             if (!isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
@@ -242,14 +249,20 @@ public class HandBaggageInformationFactory {
                         || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31))) {
                     return newMyCompanyHandBaggageInformation(translationRepository, renderLanguage);
                 }
+                
+-               if (!(outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
+-                       || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31)))) {
+-                   return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
+-               }
 
             }
-            if (isMyCompany(flight)) {
-                if (!(outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
-                        || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31)))) {
-                    return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
-                }
-            }
+            
++           if (isMyCompany(flight)) {
++               if (!(outboundDepartureDate.isAfter(LocalDateTime.of(2018, 11, 1, 0, 0, 0))
++                       || returnDepartureDate.isAfter(LocalDate.of(2018, 10, 31)))) {
++                   return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
++               }
++           }
 
             if (!isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
@@ -260,7 +273,6 @@ public class HandBaggageInformationFactory {
     }
 }
 ```  
->[Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/623019ec167ea7a0e6e5c0b0057d2bf8a83da9f1/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 After having done this process for all the if conditions,
  we will finally get the flatten if structure
