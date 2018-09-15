@@ -1,7 +1,8 @@
 
 # Refactoring - A real case of a nested if structure transformed into a chain of responsibility
-In this post I describe step by step a process used to transform 
+In this post I am going to describe a step by step process used to transform 
 a nested if structure into a chain of responsibility. 
+The purpose of this operation is to make the code easier to read, thus to changed without errors. 
 The code of this post is based on a piece of code used to satisfy a real business need, 
 we just removed the business related details.
 The language used is java.
@@ -1413,9 +1414,7 @@ The main steps are flatten the if structure into a sequence of plain if clause,
 extract each if clause with its correspondent effect into a separate class, 
 extract a common interface for each of the extracted classes,
 create an array containing all the classes and loop over it and use the first item of the list that can handle the
-case you are dealing with. 
-Finally you can inject the list of classes in order to make the class work with any combination of rules that you want.    
-Also we saw some 
-
-
-todo - add why you want to use a chain instead of ifs.
+case you are dealing with, 
+inject the list of classes in order to make the class work with any combination of rules that you want.    
+Additionally, we saw some features of Idea IDE that allow us to perform most of the refactoring operations automatically,
+with only a few shortcuts. 
