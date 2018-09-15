@@ -1407,7 +1407,15 @@ public class HandBaggageInformationFactoryTest {
 ```
 
 ## Conclusion
-todo
+In this article we saw how to transform, step by step, a nested if structure into a chain of responsibility. 
+The purpose of it is to make the code more readable and though easier to extend without introducing bugs.
+The main steps are flatten the if structure into a sequence of plain if clause, 
+extract each if clause with its correspondent effect into a separate class, 
+extract a common interface for each of the extracted classes,
+create an array containing all the classes and loop over it and use the first item of the list that can handle the
+case you are dealing with. 
+Finally you can inject the list of classes in order to make the class work with any combination of rules that you want.    
+Also we saw some 
 
 
 todo - add why you want to use a chain instead of ifs.
