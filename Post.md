@@ -1306,26 +1306,27 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-And after extracting the class in its own file, we are going to inject the policies as parameter at construction time
-of HandBaggageInformationFactory.
-To make the IDE work for you, from the previous code, you can make the `policies` variable of `from` method become a field, 
-with the command `Extract field`, and decide to define it in the constructor. 
-Then in the constructor, you can simply use the `Extract parameter` feature in order to update all the constructors of 
-your object.
-```java
+And after extracting the class `HandBaggagePoliciesFactory` in its own file, we are going to inject the policies 
+as parameter at construction time of `HandBaggageInformationFactory`.
+Again, if you are using Idea, you can make the IDE work for you. You can just make the `policies` variable of `from` method become a field, 
+with the command `Extract field`, decide to define it in the constructor and, then, you simply use 
+the `Extract parameter` feature in order to update all the constructors of your object.
+```diff
 public class HandBaggageInformationFactory {
 
-    private final List<HandBaggageInformationPolicy> handBaggageInformationPolicies;
++   private final List<HandBaggageInformationPolicy> handBaggageInformationPolicies;
 
-    public HandBaggageInformationFactory(List<HandBaggageInformationPolicy> handBaggageInformationPolicies) {
-        this.handBaggageInformationPolicies = handBaggageInformationPolicies;
-    }
++   public HandBaggageInformationFactory(List<HandBaggageInformationPolicy> handBaggageInformationPolicies) {
++       this.handBaggageInformationPolicies = handBaggageInformationPolicies;
++   }
 
     public HandBaggageInformation from(Order order, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
 
         NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
                 new NotMyCompanyHandBaggageInformationFactory();
+                
+-       List<HandBaggageInformationPolicy> policies = new HandBaggagePoliciesFactory().make(translationRepository);                
 
         return handBaggageInformationPolicies.stream()
                 .filter(policy -> policy.canHandle(flight))
@@ -1336,8 +1337,9 @@ public class HandBaggageInformationFactory {
 
 }
 ```
-In our example, only the `HandBaggageInformationFactoryTest` has been updated.
-```java
+In our example, only the `HandBaggageInformationFactoryTest` has been updated. Notice, though, that we don't need to 
+perform changes on the tests at all. They still pass. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/99d743baa3d65c8041cb09af6dde757408914272/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+```diff
 public class HandBaggageInformationFactoryTest {
 
     private HandBaggageInformationFactory handBaggageInformationFactory;
@@ -1345,31 +1347,35 @@ public class HandBaggageInformationFactoryTest {
     @Before
     public void setUp() {
         TranslationRepository translationRepository = Mockito.mock(TranslationRepository.class);
-        handBaggageInformationFactory =
-                new HandBaggageInformationFactory(HandBaggagePoliciesFactory.make(translationRepository));
-        }
+-        handBaggageInformationFactory = new HandBaggageInformationFactory();
++        handBaggageInformationFactory =
++                new HandBaggageInformationFactory(HandBaggagePoliciesFactory.make(translationRepository));
++        }
         
     //The rest is the same    
 }
-```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/99d743baa3d65c8041cb09af6dde757408914272/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)   
+```   
 
-For consistency purpose, we are going to inject also the `NotMyCompanyHandBaggageInformationFactory` into the 
-`HandBaggageInformationFactory`.
-```java
+For consistency purpose, i.e. in order to maintain the same level of abstraction, we are going to inject also 
+the `NotMyCompanyHandBaggageInformationFactory` into the `HandBaggageInformationFactory`.
+```diff
 public class HandBaggageInformationFactory {
 
     private final List<HandBaggageInformationPolicy> handBaggageInformationPolicies;
-    private final NotMyCompanyHandBaggageInformationFactory fallbackHandBaggageFactory;
++   private final NotMyCompanyHandBaggageInformationFactory fallbackHandBaggageFactory;
 
-    public HandBaggageInformationFactory(List<HandBaggageInformationPolicy> handBaggageInformationPolicies,
-                                         NotMyCompanyHandBaggageInformationFactory fallbackHandBaggageFactory) {
+-   public HandBaggageInformationFactory(List<HandBaggageInformationPolicy> handBaggageInformationPolicies) {
++   public HandBaggageInformationFactory(List<HandBaggageInformationPolicy> handBaggageInformationPolicies,
++                                        NotMyCompanyHandBaggageInformationFactory fallbackHandBaggageFactory) {
         this.handBaggageInformationPolicies = handBaggageInformationPolicies;
-        this.fallbackHandBaggageFactory = fallbackHandBaggageFactory;
-    }
++       this.fallbackHandBaggageFactory = fallbackHandBaggageFactory;
++   }
 
     public HandBaggageInformation from(Order order, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
+        
+-       NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
+-                       new NotMyCompanyHandBaggageInformationFactory();
 
         return handBaggageInformationPolicies.stream()
                 .filter(policy -> policy.canHandle(flight))
@@ -1379,8 +1385,9 @@ public class HandBaggageInformationFactory {
     }
 }
 ``` 
-and then, again, the `HandBaggageInformationFactoryTest` gets updated.
-```java
+And, then, again, the `HandBaggageInformationFactoryTest` gets updated. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/eac1ba3e1dc8f5cce3ba6c545349cd6d4730671e/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+
+```diff
 public class HandBaggageInformationFactoryTest {
 
  private HandBaggageInformationFactory handBaggageInformationFactory;
@@ -1391,14 +1398,13 @@ public class HandBaggageInformationFactoryTest {
          handBaggageInformationFactory =
             new HandBaggageInformationFactory(
                 HandBaggagePoliciesFactory.make(translationRepository),
-                    new NotMyCompanyHandBaggageInformationFactory()
++                    new NotMyCompanyHandBaggageInformationFactory()
             );
          
      //The rest is the same    
     }
 }
-```   
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/eac1ba3e1dc8f5cce3ba6c545349cd6d4730671e/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
+```
 
 ## Conclusion
 todo
