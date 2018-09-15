@@ -1234,18 +1234,43 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-Now we are going to use again the `Extract method object` feature of the IDE (I know, it's getting kind of repetitive) 
-in order to extract the `HandBaggagePoliciesFactory` object, which is responsible for creating the policies.
+Now we are going to move the responsibility of creating the policies in a new class, the `HandBaggagePoliciesFactory`. 
+The purpose here, is to have each class to perform a single operation. Does it sound familiar? No? Well, this is the *Single 
+Responsibility Principle*.    
+Again, if you use Idea, you can use its `Extract method object` feature. 
+I know, it's getting kind of repetitive :) but this is one of the refactoring commands we use most frequently 
+when we refactor code, so if you use it, you can save a lot of time.
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/0255c3442abd34a07832a367ca0ee04bfc624659/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
  
-```java
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
 
+-       NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
+-               new NewMyCompanyHandBaggageInformationFactory(translationRepository);
+-       OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory =
+-               new OldMyCompanyHandBaggageInformationFactory(translationRepository);
         NotMyCompanyHandBaggageInformationFactory notMyCompanyHandBaggageInformationFactory =
-                new NotMyCompanyHandBaggageInformationFactory();
+               new NotMyCompanyHandBaggageInformationFactory();
 
-        List<HandBaggageInformationPolicy> policies = new HandBaggagePoliciesFactory().make(translationRepository);
+-       HandBaggageInformationPolicy myCompanyOneWayAfterTheFirstOfNovember =
+-               new MyCompanyOneWayAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
+-       HandBaggageInformationPolicy myCompanyOneWayBeforeTheFirstOfNovember =
+-               new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
+-       HandBaggageInformationPolicy myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
+-               new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
+-       HandBaggageInformationPolicy myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
+-               MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
+-
+-       List<HandBaggageInformationPolicy> policies = Arrays.asList(
+-               myCompanyOneWayAfterTheFirstOfNovember,
+-               myCompanyOneWayBeforeTheFirstOfNovember,
+-               myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,
+-               myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
+-       );
+
++       List<HandBaggageInformationPolicy> policies = new HandBaggagePoliciesFactory().make(translationRepository);
 
         return policies.stream()
                 .filter(policy -> policy.canHandle(flight))
@@ -1254,33 +1279,32 @@ public class HandBaggageInformationFactory {
                 .orElse(notMyCompanyHandBaggageInformationFactory.make());
     }
 
-    private static class HandBaggagePoliciesFactory {
-        public List<HandBaggageInformationPolicy> make(TranslationRepository translationRepository) {
-            NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
-                    new NewMyCompanyHandBaggageInformationFactory(translationRepository);
-            OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory =
-                    new OldMyCompanyHandBaggageInformationFactory(translationRepository);
-
-            HandBaggageInformationPolicy myCompanyOneWayAfterTheFirstOfNovember =
-                    new MyCompanyOneWayAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-            HandBaggageInformationPolicy myCompanyOneWayBeforeTheFirstOfNovember =
-                    new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
-            HandBaggageInformationPolicy myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
-                    new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
-            HandBaggageInformationPolicy myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
-                    MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
-
-            return Arrays.asList(
-                    myCompanyOneWayAfterTheFirstOfNovember,
-                    myCompanyOneWayBeforeTheFirstOfNovember,
-                    myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,
-                    myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
-            );
-        }
-    }
++   private static class HandBaggagePoliciesFactory {
++       public List<HandBaggageInformationPolicy> make(TranslationRepository translationRepository) {
++           NewMyCompanyHandBaggageInformationFactory newMyCompanyHandBaggageInformationFactory =
++                   new NewMyCompanyHandBaggageInformationFactory(translationRepository);
++           OldMyCompanyHandBaggageInformationFactory oldMyCompanyHandBaggageInformationFactory =
++                   new OldMyCompanyHandBaggageInformationFactory(translationRepository);
++
++           HandBaggageInformationPolicy myCompanyOneWayAfterTheFirstOfNovember =
++                   new MyCompanyOneWayAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
++           HandBaggageInformationPolicy myCompanyOneWayBeforeTheFirstOfNovember =
++                   new MyCompanyOneWayBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
++           HandBaggageInformationPolicy myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember =
++                   new MyCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember(newMyCompanyHandBaggageInformationFactory);
++           HandBaggageInformationPolicy myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember = new
++                   MyCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember(oldMyCompanyHandBaggageInformationFactory);
++
++           return Arrays.asList(
++                   myCompanyOneWayAfterTheFirstOfNovember,
++                   myCompanyOneWayBeforeTheFirstOfNovember,
++                   myCompanyRoundTripAtLeastOneDepartureAfterTheFirstOfNovember,
++                   myCompanyRoundTripAllDeparturesBeforeTheFirstOfNovember
++           );
++       }
++   }
 }
 ```
-> [Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/0255c3442abd34a07832a367ca0ee04bfc624659/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 And after extracting the class in its own file, we are going to inject the policies as parameter at construction time
 of HandBaggageInformationFactory.
