@@ -1070,11 +1070,10 @@ Then it's time to extract each policy into its own file and move all the policie
 that, for the sake of giving meaningful names, we will call `policy`. 
 To do this, we need to duplicate our threshold constant into more than one policy implementation. 
 
-This could be arguable because it is a duplication. 
-Of course, there are alternatives to this, like making the constant public, but then we have the problem 
-to decide where to put it.  
-So, given the nature of our real case problem, in which the date will pass soon, we decide to apply the ostrich algorithm 
-(i.e. we are ignore this discussion) and prefer duplication over other alternatives.   
+This could be arguable as it is a duplication. Of course, there are alternatives to this, 
+like making the constant public, but then we have the problem to decide where to put it.  
+So, given the nature of our real case problem, in which the date will pass soon, and its very urgent time to market, 
+we decide to apply the ostrich algorithm (i.e. we are ignore this discussion) and prefer duplication over other alternatives.   
 
 Also we move the creation of all the policies before the evaluation, for a reason you will understand in the next step.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/66da72572de64865537c8baf8f24499ee6b841b7/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
