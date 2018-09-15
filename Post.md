@@ -30,6 +30,7 @@ All of this, will allow us to keep the code strictly under control and avoid to 
 ## The initial code
 Here you can find the code we were not very proud of. 
 In particular, I will report the nested if structure, which is the part we are going to refactor.
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/a6681dd088d06244878e0527e87b4c6b5bbfd50d/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
 
@@ -63,7 +64,6 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
->[Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/a6681dd088d06244878e0527e87b4c6b5bbfd50d/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 ## The execution
 ### 1 - Flatten the if structure
@@ -73,7 +73,7 @@ To do so with very small steps, we are going to remove all the `else` parts of t
 each one into an if with the condition which is the negation of the original.
 In the following piece of code, you can notice how the outer if-else has become a couple of conditions, 
 one for the original condition `flight.isOneWay()` and the other one with the opposite condition `!flight.isOneWay()`
-
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/a49340d05153074158cc59c130de6875276a92ab/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```diff
 public class HandBaggageInformationFactory {
 
@@ -111,10 +111,10 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
->[Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/a49340d05153074158cc59c130de6875276a92ab/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
-Once done this, we are going to proceed with the inner `if-else` conditions, which is `isMyCompany(flight)`. 
-```java
+Once done this, we are going to proceed with the inner `if-else` conditions, which is `isMyCompany(flight)`.
+([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/193aab6e25e83ba9c453b87961fb1582b0a63828/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)) 
+```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
         Flight flight = order.findFlight(flightId);
@@ -127,8 +127,8 @@ public class HandBaggageInformationFactory {
                     return oldMyCompanyHandBaggageInformationInfo(translationRepository, renderLanguage);
                 }
             }
-
-            if (!isMyCompany(flight)) {
+-           else {
++           if (!isMyCompany(flight)) {
                 return noMyCompanyInformationInfo();
             }
         }
@@ -154,7 +154,6 @@ public class HandBaggageInformationFactory {
     }
 }
 ```
->[Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/193aab6e25e83ba9c453b87961fb1582b0a63828/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
 
 We proceed in this way until we have removed all the `else` conditions from the code. 
 Notice that, here, you are not forced to start from the outside, but you can choose whatever position you prefer to start with.  
