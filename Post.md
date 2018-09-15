@@ -1188,7 +1188,7 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-If you prefer, you can use a stream instead of a classical loop
+If you prefer, you can use a stream instead of a classical loop.
 ```diff
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
@@ -1235,8 +1235,8 @@ public class HandBaggageInformationFactory {
 ```
 
 Now we are going to move the responsibility of creating the policies in a new class, the `HandBaggagePoliciesFactory`. 
-The purpose here, is to have each class to perform a single operation. Does it sound familiar? No? Well, this is the *Single 
-Responsibility Principle*.    
+The purpose here, is to have each class which performs a single operation. Does it sound familiar? No? Yes? Well, 
+this is the *Single Responsibility Principle*.    
 Again, if you use Idea, you can use its `Extract method object` feature. 
 I know, it's getting kind of repetitive :) but this is one of the refactoring commands we use most frequently 
 when we refactor code, so if you use it, you can save a lot of time.
@@ -1309,7 +1309,7 @@ public class HandBaggageInformationFactory {
 And after extracting the class `HandBaggagePoliciesFactory` in its own file, we are going to inject the policies 
 as parameter at construction time of `HandBaggageInformationFactory`.
 Again, if you are using Idea, you can make the IDE work for you. You can just make the `policies` variable of `from` method become a field, 
-with the command `Extract field`, decide to define it in the constructor and, then, you simply use 
+with the command `Extract field`, decide to define it in the constructor and, then, simply use 
 the `Extract parameter` feature in order to update all the constructors of your object.
 ```diff
 public class HandBaggageInformationFactory {
