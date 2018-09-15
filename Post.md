@@ -576,7 +576,7 @@ public class HandBaggageInformationFactory {
 
 Then, we repeat the operation for all the conditions but the ones that use our default value, which is the one 
 created with `notMyCompanyHandBaggageInformationFactory.make()`. 
-To be short here, we make every single condition to create different values, and join all the ones that creates the 
+To be short here, we make every single condition to create different values, and join all the ones that create the 
 default one into the default behavior. So we won't extract any class for that. 
 I skip this logic, because it's not so interesting but there are commits that show this step by step. 
 The resulting code, after having extracted the conditions, is the following.
