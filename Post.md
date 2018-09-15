@@ -74,6 +74,17 @@ each one into an if with the condition which is the negation of the original.
 In the following piece of code, you can notice how the outer if-else has become a couple of conditions, 
 one for the original condition `flight.isOneWay()` and the other one with the opposite condition `!flight.isOneWay()`
 
+```diff 
+public class Hello
+{
+   public static void Main()
+   {
+-      System.Console.WriteLine("Hello, World!");
++      System.Console.WriteLine("Rock all night long!");
+   }
+}
+```
+
 ```java
 public class HandBaggageInformationFactory {
 
