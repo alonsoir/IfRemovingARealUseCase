@@ -1,39 +1,46 @@
 
 # Refactoring - A real case of a nested if structure transformed into a chain of responsibility
 In this post I am going to describe a step by step process used to transform 
-a nested if structure into a chain of responsibility. 
-The purpose of this operation is to make the code easier to read, thus to changed without errors. 
+a nested if-structure into a chain of responsibility. 
+The purpose of this operation is to make the code easier to read, thus to change without introducing errors. 
+We will also get for free a structure that will be able to apply a more generic set of rules than the one defined at the beginning.  
 The code of this post is based on a piece of code used to satisfy a real business need, 
 we just removed the business related details.
 The language used is java.
 
 ## The need
 It seemed a normal day of work when one of our managers called a meeting 
-to inform us of a very urgent business need that should be put in production 
+to inform us of a very urgent feature that should be put in production 
 within 2 days.
-So, as usually happens in this case, between the deriving chaos and the ton of alignment 
-meetings that continuously interrupt us, 
+So, as it usually happens in this case, between the deriving chaos and the ton of alignment 
+meetings that continuously interrupted us, 
 we produced a code that basically "worked", but it was a bit chaotic. 
 Luckily we were able at least to write the tests.
+So, once put in production the feature, we decided to immediately refactor the piece of code. 
 
 ## The process
 We are going to see a step by step refactor of a specific class 
 that transforms the if-nested structure into a chain of responsibility.
-We are not going to change the tests.
+
+We are not going to change the tests because they work as an acceptance test for our use case. In an ideal world, 
+with a lot of time available, 
+we would also write the tests of all the classes we are going to extract and simplify the current test. 
+But, you know, we are not in an ideal world :)  
+
 The idea behind this refactor is to proceed with small steps, 
 possibly using the IDE functionality (I used IDEA which is very good at it), 
 and run the tests after every operation.
-Also, after each step, there is a commit so that, in case of errors 
-(and they happen), you can just use ```git checkout .``` 
-to come back to the previous working version. 
-All of this, will allow us to keep the code strictly under control and avoid to introduce bugs during the refactoring.
+Also, after each step, there is a commit, not only to allow everyone to follow the evolution of the code through the commits, 
+but also, to allow us to simply use ```git checkout .``` in case of errors, in order to come back to the previous working version. 
+All of this, allows us to keep the code strictly under control and avoid to introduce bugs during the refactoring.
 
 I will use the diff syntax to show the differences between some pieces of code. 
 Please keep in mind that I will use it in order to highlight *only the main differences* 
 between one commit and the other and it won't be the exact diff you can perform with git.
+
 ## The initial code
 Here you can find the code we were not very proud of. 
-In particular, I will report the nested if structure, which is the part we are going to refactor.
+In particular, I report the nested if-structure, which is the part we are going to refactor.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/a6681dd088d06244878e0527e87b4c6b5bbfd50d/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
@@ -70,12 +77,12 @@ public class HandBaggageInformationFactory {
 ```
 
 ## The execution
-### 1 - Flatten the if structure
-The idea here is to transform the nested if structure into a sequence of flat ifs in order to isolate
+### 1 - Flatten the if-structure
+The idea here is to transform the nested if-structure into a flat sequence of `if` clauses in order to isolate
 and explicit each single condition.  
-To do so with very small steps, we are going to remove all the `else` parts of the ifs, by transforming 
-each one into an if with the condition which is the negation of the original.
-In the following piece of code, you can notice how the outer if-else has become a couple of conditions, 
+To do so with very small steps, we are going to remove the `else` part of each `if` clause, by transforming 
+such part into an `if` clause whose condition is the negation of the original one.
+In the following piece of code, you can notice how the outer if-else has become a couple of `if` clauses, 
 one for the original condition `flight.isOneWay()` and the other one with the opposite condition `!flight.isOneWay()`
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/a49340d05153074158cc59c130de6875276a92ab/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```diff
@@ -276,7 +283,7 @@ public class HandBaggageInformationFactory {
 ```  
 
 After having done this process for all the if conditions,
- we will finally get the flat if structure. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/82d8c21bf684feeaf6d342a7b6f36409bd30acb6/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+ we will finally get the flat if-structure. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/82d8c21bf684feeaf6d342a7b6f36409bd30acb6/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
@@ -322,10 +329,10 @@ public class HandBaggageInformationFactory {
 ```
 
 ### Intermediate step - Extracting factories
-Before keeping on with the extraction of the chain of responsibility from the if structure, we will make some intermediate steps. 
+Before keeping on with the extraction of the chain of responsibility from the if-structure, we are going to make some intermediate steps. 
 In order to reduce the responsibilities of the `HandBaggageInformationFactory`, here, 
 we are going to extract three factories, each one responsible for creating a specific `HandBaggageInformation`.
-Without diving into the code used to create the object, we just extract the `NewMyCompanyHandBaggageInformationFactory`,
+Without diving into the code used to create the object, we just extract the `NewMyCompanyHandBaggageInformationFactory`
 out of the method `newMyCompanyHandBaggageInformation`.
 ([Step 1](https://github.com/bonfa/IfRemovingARealUseCase/blob/5419c7d777f7562f89c65d55a83181b787a7c9eb/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java),
 [Step 2](https://github.com/bonfa/IfRemovingARealUseCase/blob/3b6651b149932befca35c40a02c4bbd79cfab8d9/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)
@@ -577,10 +584,12 @@ public class HandBaggageInformationFactory {
 
 Then, we repeat the operation for all the conditions except for the ones that use our default value, the one 
 created with `notMyCompanyHandBaggageInformationFactory.make()`. 
-To be short here, we make every single condition create different values, and join all the ones that create the 
-default one into the default behavior. So we won't extract any class for that. 
-I skip this logic, because it's not so interesting but there are commits that show this step by step. 
-The resulting code, after having extracted the conditions, is the following. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/529ca3d37906d6c94ae3bb28ecf810e3f9e75e3b/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+First of all, we remove the condition that once true uses the default behaviour (`!flight.isOneWay() && !isMyCompany(flight)`), 
+because it is redundant.
+Then, for each remaining condition we create a class containing the evaluation of the condition and the action to 
+perform in case the condition is satisfied.  
+I skip this step by step diff because it is a repetition of the previous step but there are commits that show all the process. 
+The resulting code, after having extracted all the conditions, is the following. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/529ca3d37906d6c94ae3bb28ecf810e3f9e75e3b/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
     public HandBaggageInformation from(Order order, TranslationRepository translationRepository, String renderLanguage, Integer flightId) {
@@ -698,12 +707,13 @@ public class HandBaggageInformationFactory {
 ### 3 - Create a common signature to extract the chain item
 With another intermediate step, we are going to simplify again the code. 
 The purpose here is to obtain a common signature for all the conditions we have just extracted.   
-As this part is more domain oriented I am not diving into the details.   
+As this part is more domain oriented, I am not diving into the details.   
 Just notice the three main modifications: 
-* the `Order` passed into some conditions has the same data as the `Flight`, so we remove the `Order` class in favour of the `Flight` class. 
-* keep only one date, which is our threshold date, by playing a bit with `isAfter()` and `isBefore()`. 
-* move some operations from the `HandBaggageInformationFactory` class to the `Flight` one, which is more
+* the `Order` has the same information as the `Flight` for our case, so we remove the `Order` class in favour of the `Flight` class. 
+* Keep only one date, which is our threshold date, by playing a bit with `isAfter()` and `isBefore()`. 
+* Move some operations from the `HandBaggageInformationFactory` class to the `Flight` one, which is more
 domain oriented. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/7936f7daf9d01d4139b0fcda9980078978009d7a/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+
 So, after these operations the code looks like
 ```java
 public class HandBaggageInformationFactory {
@@ -833,6 +843,7 @@ you can notice that now all the items has a common method signature.
 And if you think that is time of an interface, you are totally right. 
 So, we can easily extract an interface from one conditions chosen randomly, 
 for example `MyCompanyOneWayAfterTheFirstOfNovember`. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/3e1cac2443d4bd5b0929917b2fc95808a21bc9ca/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+
 If you use Idea, its `Extract interface` feature can be helpful.
 
 ```diff
@@ -967,6 +978,7 @@ public class HandBaggageInformationFactory {
 
 And then, we are going to make all the conditions implement the interface `HandBaggageInformationPolicy`.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/9cf7b408ff15217894b3e101b47886f8ce993a97/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+
 Unfortunately Idea won't help us in this. 
 ```diff
 public class HandBaggageInformationFactory {
@@ -1068,13 +1080,13 @@ public class HandBaggageInformationFactory {
 ```
 
 Then it's time to extract each policy into its own file and move all the policies into a package, 
-that, for the sake of giving meaningful names, we will call `policy`. 
+that, for the sake of giving meaningful names, we call `policy`. 
 To do this, we need to duplicate our threshold constant into more than one policy implementation. 
 
 This could be arguable as it is a duplication. Of course, there are alternatives to this, 
 like making the constant public, but then we have the problem to decide where to put it.  
 So, given the nature of our real case problem, in which the date will pass soon, and its very urgent time to market, 
-we decide to apply the ostrich algorithm (i.e. we are ignore this discussion) and prefer duplication over other alternatives.   
+we decide to apply the ostrich algorithm (i.e. we are ignore this discussion) and prefer duplication over other solutions.   
 
 Also we move the creation of all the policies before the evaluation, for a reason you will understand in the next step.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/66da72572de64865537c8baf8f24499ee6b841b7/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
@@ -1235,12 +1247,13 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-Now we are going to move the responsibility of creating the policies in a new class, the `HandBaggagePoliciesFactory`. 
+Now we are going to move the responsibility of creating the policies in a new class, named `HandBaggagePoliciesFactory`. 
 The purpose here, is to have each class which performs a single operation. Does it sound familiar? No? Yes? Well, 
 this is the *Single Responsibility Principle*.    
+
 Again, if you use Idea, you can use its `Extract method object` feature. 
 I know, it's getting kind of repetitive :) but this is one of the refactoring commands we use most frequently 
-when we refactor code, so if you use it, you can save a lot of time.
+when we refactor code, so using it makes you save a lot of time.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/0255c3442abd34a07832a367ca0ee04bfc624659/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
  
 ```diff
@@ -1309,7 +1322,8 @@ public class HandBaggageInformationFactory {
 
 And after extracting the class `HandBaggagePoliciesFactory` in its own file, we are going to inject the policies 
 as parameter at construction time of `HandBaggageInformationFactory`.
-Again, if you are using Idea, you can make the IDE work for you. You can just make the `policies` variable of `from` method become a field, 
+
+in case of Idea, you can make the IDE work for you. You can just make the `policies` variable of `from` method become a field, 
 with the command `Extract field`, decide to define it in the constructor and, then, simply use 
 the `Extract parameter` feature in order to update all the constructors of your object.
 ```diff
@@ -1357,7 +1371,7 @@ public class HandBaggageInformationFactoryTest {
 }
 ```   
 
-For consistency purpose, i.e. in order to maintain the same level of abstraction, we are going to inject also 
+In order to maintain the same level of abstraction, we are going to inject also 
 the `NotMyCompanyHandBaggageInformationFactory` into the `HandBaggageInformationFactory`.
 ```diff
 public class HandBaggageInformationFactory {
@@ -1406,11 +1420,13 @@ public class HandBaggageInformationFactoryTest {
     }
 }
 ```
+And, that's it. You could keep on working on this piece of code to improve it more and more. 
+But for post, we reached our goal, so no more refactoring.  
 
 ## Conclusion
-In this article we saw how to transform, step by step, a nested if structure into a chain of responsibility. 
+In this article we saw how to transform, step by step, a nested if-structure into a chain of responsibility. 
 The purpose of it is to make the code more readable and though easier to extend without introducing bugs.
-The main steps are flatten the if structure into a sequence of plain if clause, 
+The main steps are flatten the if-structure into a sequence of plain if clause, 
 extract each if clause with its correspondent effect into a separate class, 
 extract a common interface for each of the extracted classes,
 create an array containing all the classes and loop over it and use the first item of the list that can handle the
