@@ -227,7 +227,7 @@ public class HandBaggageInformationFactory {
 Once removed all the `else`, we are going to duplicate some conditions 
 in order to have only one `if` clause inside another `if`. 
 At a first glance, it could seem complicated to understand 
-but it is actually pretty simple. 
+but it is actually pretty simple 🚀. 
 We start by duplicating `isMyCompany(flight)` in the two external `if` clauses. 
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/623019ec167ea7a0e6e5c0b0057d2bf8a83da9f1/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java)) 
 ```diff
