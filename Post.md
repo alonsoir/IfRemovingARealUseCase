@@ -348,7 +348,7 @@ and [Step 3](https://github.com/bonfa/IfRemovingARealUseCase/blob/ed33c4490bccfc
 
 If you are using IDEA, an easy way is to do it is to use its `Extract method object` feature. 
 I won't explain how to do it here, because it is out of the scope of this topic, but I have just realized I have found 
-the next topic of my blog (this is great! isn't it? ;)). 
+the next topic of my blog (this is great! isn't it? 😉). 
  
 ```diff
 public class HandBaggageInformationFactory {
