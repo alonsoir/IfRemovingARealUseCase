@@ -1,7 +1,7 @@
 
 # Refactoring - A real case of a nested if structure transformed into a chain of responsibility
 In this post I am going to describe a step by step process used to transform 
-a nested if-structure into a chain of responsibility. 
+a nested if structure into a chain of responsibility. 
 The purpose of this operation is to make the code easier to read, thus to change without introducing errors. 
 We will also get for free a structure that will be able to apply a more generic set of rules than the one defined at the beginning.  
 The code of this post is based on a piece of code used to satisfy a real business need, 
@@ -12,7 +12,7 @@ The language used is java.
 It seemed a normal day of work when one of our managers called a meeting 
 to inform us of a very urgent feature that should be put in production 
 within 2 days.
-So, as it usually happens in this case, between the deriving chaos and the ton of alignment 
+So, as it usually happens in this case, between the deriving chaos and the tons of alignment 
 meetings that continuously interrupted us, 
 we produced a code that basically "worked", but it was a bit chaotic. 
 Luckily we were able at least to write the tests.
@@ -40,7 +40,7 @@ between one commit and the other and it won't be the exact diff you can perform 
 
 ## The initial code
 Here you can find the code we were not very proud of. 
-In particular, I report the nested if-structure, which is the part we are going to refactor.
+In particular, I report the nested if structure, which is the part we are going to refactor.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/a6681dd088d06244878e0527e87b4c6b5bbfd50d/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
@@ -77,8 +77,8 @@ public class HandBaggageInformationFactory {
 ```
 
 ## The execution
-### 1 - Flatten the if-structure
-The idea here is to transform the nested if-structure into a flat sequence of `if` clauses in order to isolate
+### 1 - Flatten the if structure
+The idea here is to transform the nested if structure into a flat sequence of `if` clauses in order to isolate
 and explicit each single condition.  
 To do so with very small steps, we are going to remove the `else` part of each `if` clause, by transforming 
 such part into an `if` clause whose condition is the negation of the original one.
@@ -283,7 +283,7 @@ public class HandBaggageInformationFactory {
 ```  
 
 After having done this process for all the if conditions,
- we will finally get the flat if-structure. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/82d8c21bf684feeaf6d342a7b6f36409bd30acb6/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
+ we will finally get the flat if structure. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/82d8c21bf684feeaf6d342a7b6f36409bd30acb6/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
     private static final LocalDateTime FIRST_OF_NOVEMBER = LocalDateTime.of(2018, 11, 1, 0, 0, 0);
@@ -329,7 +329,7 @@ public class HandBaggageInformationFactory {
 ```
 
 ### Intermediate step - Extracting factories
-Before keeping on with the extraction of the chain of responsibility from the if-structure, we are going to make some intermediate steps. 
+Before keeping on with the extraction of the chain of responsibility from the if structure, we are going to make some intermediate steps. 
 In order to reduce the responsibilities of the `HandBaggageInformationFactory`, here, 
 we are going to extract three factories, each one responsible for creating a specific `HandBaggageInformation`.
 Without diving into the code used to create the object, we just extract the `NewMyCompanyHandBaggageInformationFactory`
@@ -1424,12 +1424,12 @@ And, that's it. You could keep on working on this piece of code to improve it mo
 But for post, we reached our goal, so no more refactoring.  
 
 ## Conclusion
-In this article we saw how to transform, step by step, a nested if-structure into a chain of responsibility. 
+In this article we saw how to transform, step by step, a nested if structure into a chain of responsibility. 
 The purpose of it is to make the code more readable and though easier to extend without introducing bugs.
-The main steps are flatten the if-structure into a sequence of plain if clause, 
-extract each if clause with its correspondent effect into a separate class, 
-extract a common interface for each of the extracted classes,
-create an array containing all the classes and loop over it and use the first item of the list that can handle the
+The main steps are flatten the if structure into a sequence of plain if clauses, 
+extract each if clause and its correspondent effect into a separate class, 
+extract an interface which is common to all the extracted classes,
+create an array containing all the classes and loop over it by using the first item of the list that is able to handle the
 case you are dealing with, 
 inject the list of classes in order to make the class work with any combination of rules that you want.    
 Additionally, we saw some features of Idea IDE that allow us to perform most of the refactoring operations automatically,
