@@ -1258,7 +1258,7 @@ The purpose here, is to have each class which performs a single operation. Does 
 this is the *Single Responsibility Principle* 🤩.    
 
 Again, if you use Idea, you can use its `Extract method object` feature. 
-I know, it's getting kind of repetitive :) but this is one of the refactoring commands we use most frequently 
+I know, it's getting kind of repetitive 😅 but this is one of the refactoring commands we use most frequently 
 when we refactor code, so using it makes you save a lot of time.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/0255c3442abd34a07832a367ca0ee04bfc624659/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
  
