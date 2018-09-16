@@ -590,8 +590,7 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-Then, we repeat the operation for all the conditions except for the ones that use our default value, the one 
-created with `notMyCompanyHandBaggageInformationFactory.make()`. 
+Then, we repeat the operation for all the conditions except for the ones that use our default value, `notMyCompanyHandBaggageInformationFactory.make()`. 
 First of all, we remove the condition that once true uses the default behaviour (`!flight.isOneWay() && !isMyCompany(flight)`), 
 because it is redundant.
 Then, for each remaining condition we create a class containing the evaluation of the condition and the action to 
