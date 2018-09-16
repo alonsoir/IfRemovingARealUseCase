@@ -594,7 +594,8 @@ Then, we repeat the operation for all the conditions except for the ones that us
 First of all, we remove the condition that once true uses the default behaviour (`!flight.isOneWay() && !isMyCompany(flight)`), 
 because it is redundant.
 Then, for each remaining condition we create a class containing the evaluation of the condition and the related action.  
-I skip this step by step diff because it is a repetition of the previous one but in the repo there are all the commits that show the process. 
+I skip this step by step diff because it is a repetition of the previous one, but in the repo there are all the commits that show the process. 
+
 The resulting code, after having extracted all the conditions, is the following. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/529ca3d37906d6c94ae3bb28ecf810e3f9e75e3b/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
@@ -710,8 +711,7 @@ public class HandBaggageInformationFactory {
 }
 ```
 
-### 3 - Create a common signature to extract the chain item
-With another intermediate step, we are going to simplify again the code. 
+### 3 - Create a common signature to extract the chain item 
 The purpose here is to obtain a common signature for all the conditions we have just extracted.   
 As this part is more domain oriented, I am not diving into the details.   
 Just notice the three main modifications: 
