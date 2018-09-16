@@ -32,7 +32,7 @@ that transforms the if-nested structure into a chain of responsibility.
 We are not going to change the tests because they work as an acceptance test for our use case. In an ideal world, 
 with a lot of time available, 
 we would also write the tests of all the classes we are going to extract and simplify the current test. 
-But, you know, we are not in an ideal world :)  
+But, you know, we are not in an ideal world 😅  
 
 The idea behind this refactor is to proceed with small steps, 
 possibly using the IDE functionality (I used IDEA which is very good at it), 
