@@ -846,7 +846,7 @@ public class HandBaggageInformationFactory {
 ### 4 - Extracting the interface of the chain item
 By watching closely all the extracted conditions after the simplifications made, 
 you can notice that now all the items has a common method signature.
-And if you think that is time of an interface, you are totally right. 
+And if you think that is time of an interface, you are totally right 🏆. 
 So, we can easily extract an interface from one conditions chosen randomly, 
 for example `MyCompanyOneWayAfterTheFirstOfNovember`. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/3e1cac2443d4bd5b0929917b2fc95808a21bc9ca/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 
