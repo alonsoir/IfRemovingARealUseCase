@@ -9,7 +9,7 @@ we just removed the business related details.
 The language used is java.
 
 ##### The process in short
-* Flatten the if structure into a flat sequence of `if`
+* Flatten the if structure into a flat sequence of `if` clauses
 * Extract each condition and action into a single class
 * Create a common interface for all the extracted conditions
 * Put all the conditions into a list
