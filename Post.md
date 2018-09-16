@@ -37,13 +37,13 @@ But, you know, we are not in an ideal world 😅
 The idea behind this refactor is to proceed with small steps, 
 possibly using the IDE functionality (I used IDEA which is very good at it), 
 and run the tests after every operation.
-Also, after each step, there is a commit, not only to allow everyone to follow the evolution of the code through the commits, 
-but also, to allow us to simply use ```git checkout .``` in case of errors, in order to come back to the previous working version. 
+Also, after each step there is a commit, not only to allow everyone to follow the evolution of the code through the commits, 
+but also to allow us to simply use ```git checkout .``` in case of errors, in order to come back to the previous working version. 
 All of this, allows us to keep the code strictly under control and avoid to introduce bugs during the refactoring.
 
 I will use the diff syntax to show the differences between some pieces of code. 
 Please keep in mind that I will use it in order to highlight *only the main differences* 
-between one commit and the other and it won't be the exact diff you can perform with git.
+between one commit and the other and it won't be the exact diff you can get with git.
 
 ## The initial code
 Here you can find the code we were not very proud of. 
