@@ -175,6 +175,7 @@ public class HandBaggageInformationFactory {
 
 We proceed in this way until we have removed all the `else` conditions from the code. 
 Here, you are not forced to start from the most external clause, but you can choose whatever position you prefer to start with.
+The important thing, here is that once finished you won't have any `else` clause inside your code.
 ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/d496798575f2ee7487f1f2a04d0ce124dbb921c2/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))  
 ```java
 public class HandBaggageInformationFactory {
