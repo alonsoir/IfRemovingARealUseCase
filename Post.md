@@ -290,7 +290,7 @@ public class HandBaggageInformationFactory {
 }
 ```  
 
-After having done this process for all the if conditions,
+After having done this process for all the conditions,
  we will finally get the flat if structure. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/82d8c21bf684feeaf6d342a7b6f36409bd30acb6/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
