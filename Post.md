@@ -8,6 +8,13 @@ The code of this post is based on a piece of code used to satisfy a real busines
 we just removed the business related details.
 The language used is java.
 
+##### The process in short
+* Flatten the if structure into a flat sequence of `if`
+* Extract each condition and action into a single class
+* Create a common interface for all the extracted conditions
+* Put all the conditions into a list
+* Loop over the list and return the first action for which the condition is satisfied 
+
 ## The need
 It seemed a normal day of work when one of our managers called a meeting 
 to inform us of a very urgent feature that should be put in production 
