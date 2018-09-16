@@ -1254,8 +1254,8 @@ public class HandBaggageInformationFactory {
 ```
 
 Now we are going to move the responsibility of creating the policies in a new class, named `HandBaggagePoliciesFactory`. 
-The purpose here, is to have each class which performs a single operation. Does it sound familiar? No? Yes? Well, 
-this is the *Single Responsibility Principle*.    
+The purpose here, is to have each class which performs a single operation. Does it sound familiar 🤔? No? Yes? Well, 
+this is the *Single Responsibility Principle* 🤩.    
 
 Again, if you use Idea, you can use its `Extract method object` feature. 
 I know, it's getting kind of repetitive :) but this is one of the refactoring commands we use most frequently 
