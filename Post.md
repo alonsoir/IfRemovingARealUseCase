@@ -1427,7 +1427,7 @@ public class HandBaggageInformationFactoryTest {
 }
 ```
 And, that's it. You could keep on working on this piece of code to improve it more and more. 
-But for post, we reached our goal, so no more refactoring.  
+But for post, we reached our goal, so no more refactoring 👏.  
 
 ## Conclusion
 In this article we saw how to transform, step by step, a nested if structure into a chain of responsibility. 
