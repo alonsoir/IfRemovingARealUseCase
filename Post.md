@@ -1329,7 +1329,7 @@ public class HandBaggageInformationFactory {
 And after extracting the class `HandBaggagePoliciesFactory` in its own file, we are going to inject the policies 
 as parameter at construction time of `HandBaggageInformationFactory`.
 
-in case of Idea, you can make the IDE work for you. You can just make the `policies` variable of `from` method become a field, 
+In case of Idea, you can make the IDE work for you. You can just make the `policies` variable of `from` method become a field, 
 with the command `Extract field`, decide to define it in the constructor and, then, simply use 
 the `Extract parameter` feature in order to update all the constructors of your object.
 ```diff
