@@ -10,7 +10,7 @@ The language used is java.
 
 ##### The process in short
 * Flatten the if structure into a flat sequence of `if` clauses
-* Extract each condition and action into a single class
+* Extract each condition and the related action into a single class
 * Create a common interface for all the extracted conditions
 * Put all the conditions into a list
 * Loop over the list and return the first action for which the condition is satisfied 
