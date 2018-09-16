@@ -1435,7 +1435,8 @@ The purpose of it is to make the code more readable and though easier to extend 
 The main steps are flatten the if structure into a sequence of plain if clauses, 
 extract each if clause and its correspondent effect into a separate class, 
 extract an interface which is common to all the extracted classes,
-create an array containing all the classes and loop over it by using the first item of the list that is able to handle the
+create an array containing all the classes, 
+loop over it by using the first item of the list that is able to handle the
 case you are dealing with, 
 inject the list of classes in order to make the class work with any combination of rules that you want.    
 Additionally, we saw some features of Idea IDE that allow us to perform most of the refactoring operations automatically,
