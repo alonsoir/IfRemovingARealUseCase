@@ -593,8 +593,8 @@ public class HandBaggageInformationFactory {
 Then, we repeat the operation for all the conditions except for the ones that use our default value, `notMyCompanyHandBaggageInformationFactory.make()`. 
 First of all, we remove the condition that once true uses the default behaviour (`!flight.isOneWay() && !isMyCompany(flight)`), 
 because it is redundant.
-Then, for each remaining condition we create a class containing the evaluation of the condition and related action.  
-I skip this step by step diff because it is a repetition of the previous step but there are commits that show all the process. 
+Then, for each remaining condition we create a class containing the evaluation of the condition and the related action.  
+I skip this step by step diff because it is a repetition of the previous one but in the repo there are all the commits that show the process. 
 The resulting code, after having extracted all the conditions, is the following. ([Source code](https://github.com/bonfa/IfRemovingARealUseCase/blob/529ca3d37906d6c94ae3bb28ecf810e3f9e75e3b/src/main/java/it/fbonfadelli/hand_baggage/HandBaggageInformationFactory.java))
 ```java
 public class HandBaggageInformationFactory {
