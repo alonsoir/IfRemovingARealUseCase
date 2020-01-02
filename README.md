@@ -10,3 +10,8 @@ This project is under *BSD 3-Clause "New" or "Revised" License*. Read the detail
 
 Copyright (c) 2018, Francesco Bonfadelli. 
 All rights reserved. 
+
+Added by Alonso.
+
+Looks interesting this refactoring workaround...
+I found this post originally in this [link](https://technology.lastminute.com/refactor-if-using-a-chain/)
